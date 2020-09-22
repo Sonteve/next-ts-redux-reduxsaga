@@ -1,15 +1,36 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import styled from "styled-components";
+import News from "../components/News";
+import SearchBar from "../components/SearchBar";
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+const Main = () => {
+  return (
+    <MainWrapper>
+      <MainImageWrapper>
+        <TestImg>Img</TestImg>
+      </MainImageWrapper>
+      <SearchBar />
+      <News />
+    </MainWrapper>
+  );
+};
 
-export default IndexPage
+export default Main;
+
+const MainWrapper = styled.div``;
+
+const MainImageWrapper = styled.div`
+  padding: 15px;
+  background: #eee;
+`;
+
+const TestImg = styled.div`
+  height: 150px;
+  background: #dbdbdb;
+  border: 1px solid black;
+  border-radius: 15px;
+  display: flex;
+  color: #fff;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+`;

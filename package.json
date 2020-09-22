@@ -8,9 +8,22 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@types/next-redux-wrapper": "^3.0.0",
+    "@types/react-redux": "^7.1.9",
+    "@types/styled-components": "^5.1.3",
+    "axios": "^0.20.0",
+    "babel-plugin-styled-components": "^1.11.1",
+    "immer": "^7.0.9",
     "next": "latest",
+    "next-redux-wrapper": "^6.0.2",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-saga": "^1.1.3",
+    "styled-components": "^5.2.0",
+    "typesafe-actions": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
