@@ -6,7 +6,7 @@ const Main = () => {
   return (
     <MainWrapper>
       <MainImageWrapper>
-        <TestImg>Img</TestImg>
+        <TestImg>Agripa</TestImg>
       </MainImageWrapper>
       <SearchBar />
       <News />

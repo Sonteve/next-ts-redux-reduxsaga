@@ -1,4 +1,4 @@
-import { delay, takeLatest, throttle, put } from "redux-saga/effects";
+import { throttle, put, call } from "redux-saga/effects";
 import { ActionType } from "typesafe-actions";
 import {
   searchWordAction,
@@ -6,24 +6,28 @@ import {
   SEARCH_WORD_SUCCESS,
   SEARCH_WORD_FAILURE,
 } from "../reducers/search";
+import axios from "axios";
+
+function searchWordAPI(data: string) {
+  return axios.get(`/search/${data}`);
+}
 
 function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
-  console.log("searchWordAction", action);
+  console.log("searchWordSaga", action);
   try {
-    yield delay(500);
-    /* const result = action.payload; */
+    const result = yield call(searchWordAPI, action.payload);
     yield put({
       type: SEARCH_WORD_SUCCESS,
-      payload: action.payload,
+      payload: result.data,
     });
   } catch (error) {
     yield put({
       type: SEARCH_WORD_FAILURE,
-      error: error.response.data,
+      payload: error.response.data,
     });
   }
 }
 
 export function* searchSaga() {
-  yield takeLatest(SEARCH_WORD_REQUEST, searchWordSaga);
+  yield throttle(100, SEARCH_WORD_REQUEST, searchWordSaga);
 }
