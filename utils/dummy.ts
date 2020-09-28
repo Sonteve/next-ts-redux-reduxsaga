@@ -107,3 +107,21 @@ export const retailPrice = {
     },
   ],
 };
+
+export const newsData = [
+  {
+    title: "뉴스기사 1",
+    source: "언론사 1",
+    createdAt: "20.00.01",
+  },
+  {
+    title: "뉴스기사 2",
+    source: "언론사 2",
+    createdAt: "20.00.02",
+  },
+  {
+    title: "뉴스기사 3",
+    source: "언론사 3",
+    createdAt: "20.00.03",
+  },
+];

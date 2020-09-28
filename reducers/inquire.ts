@@ -38,13 +38,13 @@ const initialState: InquireState = {
 };
 
 const inquire = createReducer<InquireState, InquireAction>(initialState, {
-  [INIT_INQUIRE]: (state, action) =>
+  [INIT_INQUIRE]: (state) =>
     produce(state, (draft) => {
       draft.inquireContent = null;
       draft.sendInquireDone = false;
       draft.sendInquireError = null;
     }),
-  [SEND_INQUIRE_REQUEST]: (state, action) =>
+  [SEND_INQUIRE_REQUEST]: (state) =>
     produce(state, (draft) => {
       draft.sendInquireLoading = true;
       draft.sendInquireError = null;
