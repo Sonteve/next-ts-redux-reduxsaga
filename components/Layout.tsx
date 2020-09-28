@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 
+// 공통 레이아웃 부분
 type Props = {
   children?: ReactNode;
 };

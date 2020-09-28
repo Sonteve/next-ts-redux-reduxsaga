@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { searchWordAction, setPrevSearchCookie } from "../reducers/search";
 import { RootState } from "../reducers";
 import Router from "next/router";
@@ -18,11 +18,15 @@ import useInput from "../hooks/useInput";
 
 moment.locale("ko");
 
-interface SearchBarProps {
+interface Props {
   focus?: boolean;
 }
 
-const SearchBar = ({ focus }: SearchBarProps) => {
+interface SCProps {
+  detail?: boolean;
+}
+
+const SearchBar = ({ focus }: Props) => {
   const dispatch = useDispatch();
 
   const { searchList, searchLoading, prevSearchList } = useSelector(
@@ -69,14 +73,21 @@ const SearchBar = ({ focus }: SearchBarProps) => {
     Router.replace(`/${item}`);
   }, []);
 
+  const onClickCloseButton = useCallback(() => {
+    console.log("닫힘");
+    setSearchFocus(false);
+  }, []);
+
   // 현재 페이지내부에 어디를 클릭했는지를 확인하는 이벤트핸들러
   useEffect(() => {
-    const focusCheck = (e: any) => {
+    const focusCheck = () => {
       const activeElement = document.activeElement;
-      if (activeElement !== e.target) {
-        setSearchFocus(false);
-      } else {
+      console.log("activeElement", activeElement);
+      console.log("inputref", inputRef.current);
+      if (activeElement === inputRef.current) {
         setSearchFocus(true);
+      } else {
+        setSearchFocus(false);
       }
     };
     document.addEventListener("click", focusCheck);
@@ -113,7 +124,7 @@ const SearchBar = ({ focus }: SearchBarProps) => {
   }, [searchFocus]);
 
   return (
-    <SearchForm onSubmit={onSubmitSearchForm}>
+    <SearchForm detail={focus} onSubmit={onSubmitSearchForm}>
       <InputWrapper>
         <input
           ref={inputRef}
@@ -123,50 +134,44 @@ const SearchBar = ({ focus }: SearchBarProps) => {
         />
         <SearchResult>
           {!input && prevSearchList && searchFocus && (
-            <div
-              style={{
-                background: "white",
-              }}
-            >
+            <PrevSearchList>
               <div>이전 검색목록</div>
               {prevSearchList.map((prev) => (
-                <div
+                <SearchItem
                   key={prev.name}
                   onClick={() => onClickItem(prev.name)}
-                  style={{
-                    background: "black",
-                    color: "yellow",
-                    padding: "10px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
                 >
                   <span>{prev.name}</span>
                   <span>{prev.createdAt}</span>
-                </div>
+                </SearchItem>
               ))}
-            </div>
+            </PrevSearchList>
           )}
           {input &&
             searchList.map((searchItem) => (
-              <div
+              <SearchItem
+                key={searchItem.id}
                 onClick={() => onClickItem(searchItem.name)}
-                style={{
-                  background: "black",
-                  color: "yellow",
-                  padding: "10px",
-                }}
               >
                 {searchItem.name}
-              </div>
+              </SearchItem>
             ))}
         </SearchResult>
       </InputWrapper>
+      <RemoveButton onClick={onClickCloseButton}>X</RemoveButton>
     </SearchForm>
   );
 };
 
 export default SearchBar;
+
+const RemoveButton = styled.button`
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  position: absolute;
+  right: 1%;
+`;
 
 const SearchResult = styled.div`
   position: absolute;
@@ -174,15 +179,26 @@ const SearchResult = styled.div`
   font-size: 18px;
   top: 40px;
 `;
-const SearchForm = styled.form`
+const SearchForm = styled.form<SCProps>`
   padding: 10px;
   background: #dbdbdb;
   border: 1px solid #eaeaea;
+  display: flex;
+
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  ${(props) =>
+    props.detail &&
+    css`
+      position: absolute;
+    `}
 `;
 
 const InputWrapper = styled.div`
   position: relative;
   display: flex;
+  flex: 1;
 
   & > input {
     flex: 1;
@@ -191,4 +207,17 @@ const InputWrapper = styled.div`
     border: 1px solid #eee;
     border-radius: 8px;
   }
+`;
+
+const PrevSearchList = styled.div`
+  background: white;
+`;
+
+const SearchItem = styled.div`
+  background: black;
+  color: yellow;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
 `;

@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import News from "../components/News";
 import SearchBar from "../components/SearchBar";
+import Footer from "../components/Footer";
+
+// 메인페이지
 
 const Main = () => {
   return (
@@ -10,6 +13,7 @@ const Main = () => {
       </MainImageWrapper>
       <SearchBar />
       <News />
+      <Footer />
     </MainWrapper>
   );
 };

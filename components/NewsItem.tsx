@@ -2,11 +2,11 @@ import React from "react";
 import { NewsData } from "../interfaces/news";
 import styled from "styled-components";
 
-interface NewsItemProps {
+interface Props {
   data: NewsData;
 }
 
-const NewsItem = ({ data }: NewsItemProps) => {
+const NewsItem = ({ data }: Props) => {
   return (
     <NewsItemWrapper>
       <NewsTitle>{data.title}</NewsTitle>
