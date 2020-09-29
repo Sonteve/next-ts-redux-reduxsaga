@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import { getYoutubeAction } from "../reducers/media";
+import { getYoutubeAction, getMoreYoutubeAction } from "../reducers/media";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import moment from "moment";
@@ -10,12 +10,35 @@ import MoreMediaButton from "./MoreMediaButton";
 const Youtube = () => {
   const dispatch = useDispatch();
   const { youtube } = useSelector(({ media }: RootState) => media);
+  const [visible, setVisible] = useState<boolean>(true);
+  const youtubeData = youtube?.data;
+  const meta = youtube?.meta;
 
   const getMoreYoutubeData = useCallback(() => {
-    console.log("more youtubedata");
-  }, []);
-  const youtubeData = youtube?.data;
+    if (!youtubeData || !meta) return;
+    if (youtubeData.length + 5 > meta.totalCount) {
+      dispatch(
+        getMoreYoutubeAction.request({
+          itemCode: 111,
+          start: meta.startIndex + 5,
+          countPerPage: meta.totalCount - meta.startIndex,
+        })
+      );
+      setVisible(false);
+    } else {
+      dispatch(
+        getMoreYoutubeAction.request({
+          itemCode: 111,
+          start: meta.startIndex + 5,
+          countPerPage: 5,
+        })
+      );
+    }
+    console.log("more youtubeData");
+  }, [youtubeData, meta]);
+
   useEffect(() => {
+    if (youtube) return;
     dispatch(
       getYoutubeAction.request({
         itemCode: 111,
@@ -50,7 +73,7 @@ const Youtube = () => {
           </YoutubeItemWrapper>
         ))}
       </LazyLoad>
-      <MoreMediaButton getMoreYoutubeData={getMoreYoutubeData} />
+      {visible && <MoreMediaButton getMoreYoutubeData={getMoreYoutubeData} />}
     </YoutubeBlock>
   );
 };

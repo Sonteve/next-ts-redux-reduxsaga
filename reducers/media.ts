@@ -124,6 +124,25 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
       draft.getNewsLoading = false;
       draft.getNewsError = action.payload;
     }),
+  [GET_MORE_YOUTUBE_REQUEST]: (state, action) =>
+    produce(state, (draft) => {
+      draft.getYoutubeLoading = true;
+      draft.getYoutubeError = null;
+    }),
+  [GET_MORE_YOUTUBE_SUCCESS]: (state, action) =>
+    produce(state, (draft) => {
+      draft.getYoutubeLoading = false;
+      draft.getYoutubeDone = true;
+      if (draft.youtube) {
+        draft.youtube.data.push(...action.payload.data);
+        draft.youtube.meta = action.payload.meta;
+      }
+    }),
+  [GET_MORE_YOUTUBE_FAILURE]: (state, action) =>
+    produce(state, (draft) => {
+      draft.getYoutubeLoading = false;
+      draft.getYoutubeError = action.payload;
+    }),
 });
 
 export default media;

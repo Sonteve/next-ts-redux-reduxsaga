@@ -85,9 +85,26 @@ function* getMoreNewsSaga(
     });
   }
 }
+function* getMoreYoutubeSaga(
+  action: ReturnType<typeof getMoreYoutubeAction.request>
+) {
+  try {
+    const result = yield call(getYoutubeAPI, action.payload);
+    yield put({
+      type: GET_MORE_YOUTUBE_SUCCESS,
+      payload: result.data,
+    });
+  } catch (error) {
+    yield put({
+      type: GET_MORE_YOUTUBE_FAILURE,
+      payload: error.response.data,
+    });
+  }
+}
 
 export function* mediaSaga() {
   yield takeLatest(GET_NEWS_REQUEST, getNewsSaga);
   yield takeLatest(GET_YOUTUBE_REQUEST, getYoutubeSaga);
   yield takeLatest(GET_MORE_NEWS_REQUEST, getMoreNewsSaga);
+  yield takeLatest(GET_MORE_YOUTUBE_REQUEST, getMoreYoutubeSaga);
 }

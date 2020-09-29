@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import MoreMediaButton from "./MoreMediaButton";
 const News = () => {
   const dispatch = useDispatch();
   const { news } = useSelector(({ media }: RootState) => media);
+  const [visible, setVisible] = useState<boolean>(true);
   const newsData = news?.data;
   const meta = news?.meta;
 
@@ -20,9 +21,10 @@ const News = () => {
         getMoreNewsAction.request({
           itemCode: 111,
           start: meta.startIndex + 5,
-          countPerPage: meta.totalCount - newsData.length,
+          countPerPage: meta.totalCount - meta.startIndex,
         })
       );
+      setVisible(false);
     } else {
       dispatch(
         getMoreNewsAction.request({
@@ -36,6 +38,7 @@ const News = () => {
   }, [newsData, meta]);
 
   useEffect(() => {
+    if (news) return;
     dispatch(
       getNewsAction.request({
         itemCode: 111,
@@ -59,7 +62,7 @@ const News = () => {
           </NewsItemWrapper>
         ))}
       </LazyLoad>
-      <MoreMediaButton getMoreNewsData={getMoreNewsData} />
+      {visible && <MoreMediaButton getMoreNewsData={getMoreNewsData} />}
     </NewsBlock>
   );
 };
