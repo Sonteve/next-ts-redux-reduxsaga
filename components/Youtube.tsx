@@ -1,44 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { YoutubeData } from "../interfaces/youtube";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
-import { youtubeData } from "../utils/dummy";
 import LazyLoad from "react-lazyload";
+import { getYoutubeAction } from "../reducers/media";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../reducers";
+import moment from "moment";
+import MoreMediaButton from "./MoreMediaButton";
 
 const Youtube = () => {
-  const [youtube, setYoutube] = useState<YoutubeData[]>();
+  const dispatch = useDispatch();
+  const { youtube } = useSelector(({ media }: RootState) => media);
 
+  const getMoreYoutubeData = useCallback(() => {
+    console.log("more youtubedata");
+  }, []);
+  const youtubeData = youtube?.data;
   useEffect(() => {
-    setYoutube(youtubeData);
+    dispatch(
+      getYoutubeAction.request({
+        itemCode: 111,
+        start: 0,
+        countPerPage: 5,
+      })
+    );
   }, []);
 
   return (
     <YoutubeBlock>
       <LazyLoad height={338}>
         {/* <YoutubeTT>인기뉴스</YoutubeTT> */}
-        {youtube?.map((data, index) => (
-          <YoutubeItemWrapper key={index}>
+        {youtubeData?.map((data, index) => (
+          <YoutubeItemWrapper
+            key={index}
+            target="_blank"
+            href={`https://www.youtube.com/watch?v=${data.VideoID}`}
+          >
             <YoutubeContent>
               <Thumbnail>
-                <img src="http://placehold.it/130x80" />
+                <img src={data.ThumbnailURL} alt={data.Title} />
               </Thumbnail>
               <Detail>
-                <DetailLeft>{data.title}</DetailLeft>
+                <DetailLeft>{data.Title}</DetailLeft>
                 <DetailRight>
-                  <div>{data.channel}</div>
-                  <div>{data.createdAt}</div>
+                  <div>{data.ChannelTitle}</div>
+                  <div>{moment(data.PublishedAt).format("YY.MM.DD")}</div>
                 </DetailRight>
               </Detail>
             </YoutubeContent>
           </YoutubeItemWrapper>
         ))}
       </LazyLoad>
+      <MoreMediaButton getMoreYoutubeData={getMoreYoutubeData} />
     </YoutubeBlock>
   );
 };
 
 export default Youtube;
 
-const Thumbnail = styled.div``;
+const Thumbnail = styled.div`
+  width: 130px;
+  & > img {
+    width: 100%;
+    display: block;
+  }
+`;
 const Detail = styled.div`
   display: flex;
   justify-content: space-between;
@@ -51,7 +76,7 @@ const DetailRight = styled.div``;
 
 const YoutubeBlock = styled.div``;
 
-const YoutubeItemWrapper = styled.div`
+const YoutubeItemWrapper = styled.a`
   padding: 10px;
   display: flex;
   flex-direction: row;

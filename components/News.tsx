@@ -1,17 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { NewsData } from "../interfaces/news";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
-import { newsData } from "../utils/dummy";
 import LazyLoad from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { getNewsAction } from "../reducers/media";
+import { getNewsAction, getMoreNewsAction } from "../reducers/media";
+import moment from "moment";
+import MoreMediaButton from "./MoreMediaButton";
 
 const News = () => {
   const dispatch = useDispatch();
   const { news } = useSelector(({ media }: RootState) => media);
-
   const newsData = news?.data;
+  const meta = news?.meta;
+
+  const getMoreNewsData = useCallback(() => {
+    if (!newsData || !meta) return;
+    if (newsData.length + 5 > meta.totalCount) {
+      dispatch(
+        getMoreNewsAction.request({
+          itemCode: 111,
+          start: meta.startIndex + 5,
+          countPerPage: meta.totalCount - newsData.length,
+        })
+      );
+    } else {
+      dispatch(
+        getMoreNewsAction.request({
+          itemCode: 111,
+          start: meta.startIndex + 5,
+          countPerPage: 5,
+        })
+      );
+    }
+    console.log("more newsdata");
+  }, [newsData, meta]);
+
   useEffect(() => {
     dispatch(
       getNewsAction.request({
@@ -27,15 +50,16 @@ const News = () => {
       {/* <NewsTT>인기뉴스</NewsTT> */}
       <LazyLoad height={212}>
         {newsData?.map((data, index) => (
-          <NewsItemWrapper key={index}>
+          <NewsItemWrapper key={index} target="_blank" href={data.Link}>
             <NewsTitle>{data.Title}</NewsTitle>
             <NewsDesc>
-              <div>{data.Description}</div>
-              <div>{data.PubDate}</div>
+              <div>{data.Press}</div>
+              <div>{moment(data.PubDate).format("YY.MM.DD")}</div>
             </NewsDesc>
           </NewsItemWrapper>
         ))}
       </LazyLoad>
+      <MoreMediaButton getMoreNewsData={getMoreNewsData} />
     </NewsBlock>
   );
 };
@@ -44,21 +68,31 @@ export default News;
 
 const NewsBlock = styled.div``;
 
-const NewsItemWrapper = styled.div`
+const NewsItemWrapper = styled.a`
   padding: 10px;
   display: flex;
   flex-direction: row;
   border: 1px solid #999;
   border-radius: 10px;
+  height: 80px;
   &:not(:last-child) {
     margin-bottom: 10px;
   }
 `;
 
 const NewsTitle = styled.div`
-  flex: 4;
+  flex: 5;
+  overflow: hidden;
 `;
 
 const NewsDesc = styled.div`
-  flex: 2;
+  flex: 3;
+  overflow: hidden;
+
+  & > div {
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    height: 50%;
+  }
 `;
