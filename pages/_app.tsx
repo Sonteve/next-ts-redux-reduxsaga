@@ -2,6 +2,7 @@ import { NextComponentType } from "next";
 import { AppContext, AppInitialProps, AppProps } from "next/app";
 import { createGlobalStyle } from "styled-components";
 import wrapper from "../store/configureStore";
+import Head from "next/head";
 
 const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   Component,
@@ -9,6 +10,9 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
 }) => {
   return (
     <>
+      <Head>
+        <title>agripa</title>
+      </Head>
       <GlobalStyle></GlobalStyle>
       <Component {...pageProps} />
     </>
@@ -38,5 +42,10 @@ const GlobalStyle = createGlobalStyle`
     body{
         padding: 0;
         margin: 0;
+    }
+    ul,li{
+      list-style:none;
+      margin:0;
+      padding: 0;
     }
 `;

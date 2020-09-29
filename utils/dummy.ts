@@ -125,3 +125,21 @@ export const newsData = [
     createdAt: "20.00.03",
   },
 ];
+
+export const youtubeData = [
+  {
+    title: "제목",
+    channel: "채널 1",
+    createdAt: "20.00.01",
+  },
+  {
+    title: "제목",
+    channel: "채널 2",
+    createdAt: "20.00.02",
+  },
+  {
+    title: "제목",
+    channel: "채널 3",
+    createdAt: "20.00.03",
+  },
+];

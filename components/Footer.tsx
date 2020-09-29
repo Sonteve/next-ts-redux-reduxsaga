@@ -54,6 +54,14 @@ const InquireSuccess = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+const SuccessBlock = styled.div`
+  position: absolute;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  height: 100vh;
+`;
+
 const Footer = () => {
   const dispatch = useDispatch();
 
@@ -82,10 +90,12 @@ const Footer = () => {
 
   if (!sendInquireLoading && inquireContent) {
     return (
-      <InquireSuccess>
-        <div>문의가 성공적으로 전달되었습니다.</div>
-        <div onClick={onCloseInquire}>닫기</div>
-      </InquireSuccess>
+      <SuccessBlock>
+        <InquireSuccess>
+          <div>문의가 성공적으로 전달되었습니다.</div>
+          <div onClick={onCloseInquire}>닫기</div>
+        </InquireSuccess>
+      </SuccessBlock>
     );
   }
 

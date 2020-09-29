@@ -7,10 +7,10 @@ import { sendInquireAction } from "../reducers/inquire";
 const InquireBlock = styled.div`
   position: fixed;
   width: 100vw;
-  height: 100vh;
-  top: 0;
+  height: 95vh;
+  top: 50%;
   left: 0;
-  /* transform: translateX(-50%); */
+  transform: translateY(-50%);
   box-sizing: border-box;
   padding: 5%;
 `;
@@ -33,11 +33,11 @@ interface Props {
 }
 
 const Title = styled.div`
-  margin-top: 10%;
+  margin-top: 5%;
   margin-bottom: 5%;
   text-align: center;
   font-size: 20px;
-  height: 5%;
+  height: 25px;
 `;
 const UserName = styled.div`
   & input {
@@ -51,7 +51,7 @@ const UserName = styled.div`
     height: 100%;
   }
   margin-bottom: 5%;
-  height: 7%;
+  height: 35px;
 `;
 const UserEmail = styled.div`
   & input {
@@ -65,7 +65,7 @@ const UserEmail = styled.div`
     height: 100%;
   }
   margin-bottom: 5%;
-  height: 7%;
+  height: 35px;
 `;
 const Questions = styled.div`
   & textarea {
@@ -79,21 +79,21 @@ const Questions = styled.div`
     height: 100%;
   }
   margin-bottom: 5%;
-  height: 20%;
+  height: 80px;
 `;
 const TermsOfUse = styled.div`
   padding: 10px;
   background: white;
   border-radius: 8px;
   font-size: 13px;
-  height: 20%;
+  height: 90px;
   margin-bottom: 5%;
   overflow-y: scroll;
 `;
 
 const CloseButton = styled.button`
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   position: absolute;
   right: 10px;
   top: 10px;
@@ -104,7 +104,7 @@ const Check = styled.div`
     font-size: 14px;
     font-weight: bold;
   }
-  height: 5%;
+  height: 25px;
   margin-bottom: 10%;
 `;
 

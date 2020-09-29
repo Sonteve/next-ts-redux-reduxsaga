@@ -1,32 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 
-interface Props {
-  title: {
-    price: string;
-    volume: string;
-  };
-  /*  chart data  */
-}
-
-const TrendChart = ({ title }: Props) => {
+const WholeChart = () => {
   return (
-    <TrendChartBlock>
+    <WholeChartBlock>
       <ChartBlock>
-        <ChartTitle>{title.price}</ChartTitle>
+        <ChartTitle>도매 가격 추이</ChartTitle>
         <ChartCanvas></ChartCanvas>
       </ChartBlock>
       <ChartBlock>
-        <ChartTitle>{title.volume}</ChartTitle>
+        <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
         <ChartCanvas></ChartCanvas>
       </ChartBlock>
-    </TrendChartBlock>
+    </WholeChartBlock>
   );
 };
 
-export default TrendChart;
+export default WholeChart;
 
-const TrendChartBlock = styled.div``;
+const WholeChartBlock = styled.div``;
 
 const ChartTitle = styled.div`
   display: flex;
