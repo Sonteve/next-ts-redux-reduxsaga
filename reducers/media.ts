@@ -50,7 +50,7 @@ type MediaActions = ActionType<
   | typeof getMoreYoutubeAction
 >;
 
-interface MediaState {
+export interface MediaState {
   news: News | null;
   getNewsLoading: boolean;
   getNewsDone: boolean;
