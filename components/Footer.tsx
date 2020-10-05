@@ -109,7 +109,18 @@ const Footer = () => {
           문의하기
         </FooterContent>
         <FooterContent>
-          <>로고</>
+          <a
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              textDecoration: "none",
+            }}
+            href="http://pandac.co.kr/"
+            target="_blank"
+          >
+            로고
+          </a>
         </FooterContent>
         <FooterAddress>
           <div>
