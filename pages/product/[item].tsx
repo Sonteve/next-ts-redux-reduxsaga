@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import SearchBar from "../../components/SearchBar";
 import { searchFormInitAction } from "../../reducers/search";
@@ -14,7 +14,7 @@ import RetailChart from "../../components/RetailChart";
 import MediaTrend from "../../components/MediaTrend";
 import wrapper from "../../store/configureStore";
 import { END } from "redux-saga";
-import { getNewsAction, getYoutubeAction } from "../../reducers/media";
+import { getNewsAction } from "../../reducers/media";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
@@ -68,13 +68,8 @@ function Detail() {
 
 export default Detail;
 
-export const getServerSideProps = wrapper.getServerSideProps(
+/* export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    /* const cookie = context.req ? context.req.headers.cookie : "";
-    axios.defaults.headers.Cookie = "";
-    if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    } */
     context.store.dispatch(
       getNewsAction.request({
         itemCode: 111,
@@ -82,14 +77,24 @@ export const getServerSideProps = wrapper.getServerSideProps(
         countPerPage: 5,
       })
     );
+
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+    return { props: {} };
+  }
+); */
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
     context.store.dispatch(
-      getYoutubeAction.request({
+      getNewsAction.request({
         itemCode: 111,
         start: 0,
         countPerPage: 5,
       })
     );
-    context.store.dispatch(END as any);
+
+    context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
     return { props: {} };
   }
@@ -104,7 +109,6 @@ const ItemImageWrapper = styled.div`
 `;
 
 const TestImg = styled.div`
-  /* padding: 50px; */
   width: 80%;
   padding: 30px 0;
   text-align: center;

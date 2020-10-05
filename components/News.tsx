@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { getNewsAction, getMoreNewsAction } from "../reducers/media";
+import { getMoreNewsAction } from "../reducers/media";
 import moment from "moment";
 import MoreMediaButton from "./MoreMediaButton";
 
@@ -36,17 +36,6 @@ const News = () => {
     }
     console.log("more newsdata");
   }, [newsData, meta]);
-
-  /* useEffect(() => {
-    if (news) return;
-    dispatch(
-      getNewsAction.request({
-        itemCode: 111,
-        start: 0,
-        countPerPage: 5,
-      })
-    );
-  }, []); */
 
   return (
     <NewsBlock>
