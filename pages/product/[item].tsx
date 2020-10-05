@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import SearchBar from "../components/SearchBar";
-import { searchFormInitAction } from "../reducers/search";
+import SearchBar from "../../components/SearchBar";
+import { searchFormInitAction } from "../../reducers/search";
 import { useDispatch } from "react-redux";
-import MarketInfo from "../components/MarketInfo";
-import { wholePrice, retailPrice } from "../utils/dummy";
-import Footer from "../components/Footer";
+import MarketInfo from "../../components/MarketInfo";
+import { wholePrice, retailPrice } from "../../utils/dummy";
+import Footer from "../../components/Footer";
 import Head from "next/head";
-import Navigation from "../components/Navigation";
-import WholeChart from "../components/WholeChart";
-import RetailChart from "../components/RetailChart";
-import MediaTrend from "../components/MediaTrend";
+import Navigation from "../../components/Navigation";
+import WholeChart from "../../components/WholeChart";
+import RetailChart from "../../components/RetailChart";
+import MediaTrend from "../../components/MediaTrend";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 

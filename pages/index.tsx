@@ -2,8 +2,6 @@ import styled from "styled-components";
 import News from "../components/News";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
-import { useEffect } from "react";
-import moment from "moment";
 
 // 메인페이지
 

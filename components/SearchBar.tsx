@@ -70,7 +70,7 @@ const SearchBar = ({ focus }: Props) => {
       console.log("새 쿠키생성");
     }
 
-    Router.replace(`/${item}`);
+    Router.replace(`/product/${item}`);
   }, []);
 
   const onClickCloseButton = useCallback(() => {
