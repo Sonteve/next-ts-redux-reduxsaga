@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import SearchBar from "../../components/SearchBar";
 import { searchFormInitAction } from "../../reducers/search";
@@ -12,6 +12,9 @@ import Navigation from "../../components/Navigation";
 import WholeChart from "../../components/WholeChart";
 import RetailChart from "../../components/RetailChart";
 import MediaTrend from "../../components/MediaTrend";
+import wrapper from "../../store/configureStore";
+import { END } from "redux-saga";
+import { getNewsAction, getYoutubeAction } from "../../reducers/media";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
@@ -64,6 +67,33 @@ function Detail() {
 }
 
 export default Detail;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    /* const cookie = context.req ? context.req.headers.cookie : "";
+    axios.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    } */
+    context.store.dispatch(
+      getNewsAction.request({
+        itemCode: 111,
+        start: 0,
+        countPerPage: 5,
+      })
+    );
+    context.store.dispatch(
+      getYoutubeAction.request({
+        itemCode: 111,
+        start: 0,
+        countPerPage: 5,
+      })
+    );
+    context.store.dispatch(END as any);
+    await context.store.sagaTask.toPromise();
+    return { props: {} };
+  }
+);
 
 const ItemImageWrapper = styled.div`
   padding: 15px;

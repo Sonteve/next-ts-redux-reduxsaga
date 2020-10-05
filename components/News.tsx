@@ -37,7 +37,7 @@ const News = () => {
     console.log("more newsdata");
   }, [newsData, meta]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (news) return;
     dispatch(
       getNewsAction.request({
@@ -46,7 +46,7 @@ const News = () => {
         countPerPage: 5,
       })
     );
-  }, []);
+  }, []); */
 
   return (
     <NewsBlock>
