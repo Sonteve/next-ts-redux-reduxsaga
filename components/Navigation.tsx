@@ -9,14 +9,14 @@ interface Props {
 
 const Navigation = ({ onClickSearchButton }: Props) => {
   const router = useRouter();
-  const { item } = router.query;
+  const { keyword } = router.query;
   return (
     <NavigationBlock>
       <FcPrevious
         onClick={() => Router.replace("/")}
         style={{ cursor: "pointer", fontSize: "30px" }}
       />
-      <div>{item}</div>
+      <div>{keyword}</div>
       <div>
         <FcSearch
           style={{ fontSize: "30px", cursor: "pointer" }}

@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 function searchWordAPI(data: string) {
-  return axios.get(`/search/${data}`);
+  return axios.get(`/v2/code/std-item-codes?query=${data}&countPerPage=5`);
 }
 
 function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
@@ -18,7 +18,7 @@ function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
     const result = yield call(searchWordAPI, action.payload);
     yield put({
       type: SEARCH_WORD_SUCCESS,
-      payload: result.data,
+      payload: result.data.data,
     });
   } catch (error) {
     yield put({

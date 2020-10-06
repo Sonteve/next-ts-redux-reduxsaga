@@ -23,7 +23,7 @@ export const sendInquireAction = createAsyncAction(
 
 type InquireAction = ActionType<typeof sendInquireAction | typeof initInquire>;
 
-interface InquireState {
+export interface InquireState {
   inquireContent: InquireSuccess | null;
   sendInquireLoading: boolean;
   sendInquireDone: boolean;

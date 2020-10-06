@@ -50,7 +50,7 @@ type MediaActions = ActionType<
   | typeof getMoreYoutubeAction
 >;
 
-interface MediaState {
+export interface MediaState {
   news: News | null;
   getNewsLoading: boolean;
   getNewsDone: boolean;
@@ -73,7 +73,7 @@ const initialState: MediaState = {
 };
 
 const media = createReducer<MediaState, MediaActions>(initialState, {
-  [GET_NEWS_REQUEST]: (state, action) =>
+  [GET_NEWS_REQUEST]: (state) =>
     produce(state, (draft) => {
       draft.getNewsLoading = true;
       draft.getNewsError = null;
@@ -89,7 +89,7 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
       draft.getNewsLoading = false;
       draft.getNewsError = action.payload;
     }),
-  [GET_YOUTUBE_REQUEST]: (state, action) =>
+  [GET_YOUTUBE_REQUEST]: (state) =>
     produce(state, (draft) => {
       draft.getYoutubeLoading = true;
       draft.getYoutubeError = null;
@@ -105,7 +105,7 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
       draft.getYoutubeLoading = false;
       draft.getYoutubeError = action.payload;
     }),
-  [GET_MORE_NEWS_REQUEST]: (state, action) =>
+  [GET_MORE_NEWS_REQUEST]: (state) =>
     produce(state, (draft) => {
       draft.getNewsLoading = true;
       draft.getNewsError = null;
@@ -124,7 +124,7 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
       draft.getNewsLoading = false;
       draft.getNewsError = action.payload;
     }),
-  [GET_MORE_YOUTUBE_REQUEST]: (state, action) =>
+  [GET_MORE_YOUTUBE_REQUEST]: (state) =>
     produce(state, (draft) => {
       draft.getYoutubeLoading = true;
       draft.getYoutubeError = null;

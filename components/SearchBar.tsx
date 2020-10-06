@@ -1,4 +1,5 @@
 import React, {
+  ChangeEvent,
   FormEvent,
   useCallback,
   useEffect,
@@ -7,15 +8,17 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
-import { searchWordAction, setPrevSearchCookie } from "../reducers/search";
+import {
+  searchWordAction,
+  setPrevSearchCookie,
+  setCurrentItem,
+} from "../reducers/search";
 import { RootState } from "../reducers";
 import Router from "next/router";
 import cookie from "react-cookies";
 import { getOneYearLater } from "../utils/getOneYearLater";
 import moment from "moment";
-import { SearchCookie } from "../interfaces/search";
-import useInput from "../hooks/useInput";
-
+import { SearchCookie, SearchItem } from "../interfaces/search";
 moment.locale("ko");
 
 interface Props {
@@ -29,12 +32,16 @@ interface SCProps {
 const SearchBar = ({ focus }: Props) => {
   const dispatch = useDispatch();
 
-  const { searchList, searchLoading, prevSearchList } = useSelector(
+  const { searchList, prevSearchList } = useSelector(
     ({ search }: RootState) => search
   );
   const [searchFocus, setSearchFocus] = useState<boolean>(false);
-  const { input, setInput, onChangeInput } = useInput("");
+  const [input, setInput] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const onChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  }, []);
 
   // submit시 입력값 확인
   const onSubmitSearchForm = useCallback(
@@ -46,18 +53,19 @@ const SearchBar = ({ focus }: Props) => {
   );
 
   // 검색결과 아이템 클릭시 쿠키에 추가 및 라우팅
-  const onClickItem = useCallback((item) => {
+  const onClickItem = useCallback((item: SearchItem) => {
     setInput("");
     const prevSearchCookie: SearchCookie[] = cookie.load("search-cookie");
     console.log("클릭한 아이템", item);
     const newData = {
-      name: item,
+      Keyword: item.Keyword,
+      ItemCode: item.ItemCode,
       createdAt: moment(new Date()).format("YY.MM.DD"),
     };
     if (prevSearchCookie) {
       prevSearchCookie.map((v) => console.log(v));
       const data = prevSearchCookie.filter(
-        (data) => data.name !== newData.name
+        (data) => data.Keyword !== newData.Keyword
       );
       cookie.save("search-cookie", [newData, ...data], {
         expires: getOneYearLater(),
@@ -69,8 +77,10 @@ const SearchBar = ({ focus }: Props) => {
       });
       console.log("새 쿠키생성");
     }
-
-    Router.replace(`/${item}`);
+    dispatch(setCurrentItem(item));
+    Router.replace(
+      `/product?keyword=${item.Keyword}&itemcode=${item.ItemCode}`
+    );
   }, []);
 
   const onClickCloseButton = useCallback(() => {
@@ -105,8 +115,9 @@ const SearchBar = ({ focus }: Props) => {
     }
   }, []);
 
+  // 검색요청
   useEffect(() => {
-    if (input !== "" && searchLoading !== true) {
+    if (input !== "") {
       dispatch(searchWordAction.request(input));
     }
   }, [input]);
@@ -136,25 +147,25 @@ const SearchBar = ({ focus }: Props) => {
           {!input && prevSearchList && searchFocus && (
             <PrevSearchList>
               <div>이전 검색목록</div>
-              {prevSearchList.map((prev) => (
-                <SearchItem
-                  key={prev.name}
-                  onClick={() => onClickItem(prev.name)}
+              {prevSearchList.map((prevItem) => (
+                <SearchingItem
+                  key={prevItem.Keyword}
+                  onClick={() => onClickItem(prevItem)}
                 >
-                  <span>{prev.name}</span>
-                  <span>{prev.createdAt}</span>
-                </SearchItem>
+                  <span>{prevItem.Keyword}</span>
+                  <span>{prevItem.createdAt}</span>
+                </SearchingItem>
               ))}
             </PrevSearchList>
           )}
           {input &&
-            searchList.map((searchItem) => (
-              <SearchItem
-                key={searchItem.id}
-                onClick={() => onClickItem(searchItem.name)}
+            searchList.map((searchItem, index) => (
+              <SearchingItem
+                key={index}
+                onClick={() => onClickItem(searchItem)}
               >
-                {searchItem.name}
-              </SearchItem>
+                {searchItem.Keyword}
+              </SearchingItem>
             ))}
         </SearchResult>
       </InputWrapper>
@@ -213,7 +224,7 @@ const PrevSearchList = styled.div`
   background: white;
 `;
 
-const SearchItem = styled.div`
+const SearchingItem = styled.div`
   background: black;
   color: yellow;
   padding: 10px;

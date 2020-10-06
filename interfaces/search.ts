@@ -1,11 +1,16 @@
 export interface SearchItem {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
+  ItemCode: string;
+  Keyword: string;
 }
 
 export interface SearchCookie {
-  name: string;
+  Keyword: string;
+  ItemCode: string;
   createdAt: string;
+}
+
+export interface ItemCodeMap {
+  StdItemCode: string;
+  ExaminItemCode: string;
+  HskPrdlstCode: string;
 }
