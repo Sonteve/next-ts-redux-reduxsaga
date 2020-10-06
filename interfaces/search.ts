@@ -1,8 +1,6 @@
 export interface SearchItem {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
+  ItemCode: string;
+  Keyword: string;
 }
 
 export interface SearchCookie {

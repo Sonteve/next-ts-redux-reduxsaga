@@ -9,16 +9,18 @@ import {
 import axios from "axios";
 
 function searchWordAPI(data: string) {
-  return axios.get(`/search/${data}`);
+  console.log("검색어", data);
+  return axios.get(`/v2/code/std-item-codes?query=${data}&countPerPage=5`);
 }
 
 function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
   console.log("searchWordSaga", action);
   try {
     const result = yield call(searchWordAPI, action.payload);
+    console.log("searchResult", result);
     yield put({
       type: SEARCH_WORD_SUCCESS,
-      payload: result.data,
+      payload: result.data.data,
     });
   } catch (error) {
     yield put({
@@ -29,5 +31,5 @@ function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
 }
 
 export function* searchSaga() {
-  yield throttle(100, SEARCH_WORD_REQUEST, searchWordSaga);
+  yield throttle(50, SEARCH_WORD_REQUEST, searchWordSaga);
 }

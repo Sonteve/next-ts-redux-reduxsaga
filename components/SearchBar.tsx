@@ -33,8 +33,12 @@ const SearchBar = ({ focus }: Props) => {
     ({ search }: RootState) => search
   );
   const [searchFocus, setSearchFocus] = useState<boolean>(false);
-  const { input, setInput, onChangeInput } = useInput("");
+  const [input, setInput] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const onChangeInput = useCallback((e) => {
+    setInput(e.target.value);
+  }, []);
 
   // submit시 입력값 확인
   const onSubmitSearchForm = useCallback(
@@ -106,7 +110,8 @@ const SearchBar = ({ focus }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (input !== "" && searchLoading !== true) {
+    /* if (input !== "" && searchLoading !== true) { */
+    if (input !== "") {
       dispatch(searchWordAction.request(input));
     }
   }, [input]);
@@ -148,12 +153,13 @@ const SearchBar = ({ focus }: Props) => {
             </PrevSearchList>
           )}
           {input &&
-            searchList.map((searchItem) => (
+            searchList.map((searchItem, index) => (
               <SearchItem
-                key={searchItem.id}
-                onClick={() => onClickItem(searchItem.name)}
+                /* key={searchItem.Keyword} */
+                key={index}
+                onClick={() => onClickItem(searchItem.ItemCode)}
               >
-                {searchItem.name}
+                {searchItem.Keyword}
               </SearchItem>
             ))}
         </SearchResult>
