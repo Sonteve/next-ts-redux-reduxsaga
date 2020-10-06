@@ -16,6 +16,7 @@ function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
   console.log("searchWordSaga", action);
   try {
     const result = yield call(searchWordAPI, action.payload);
+    console.log("searchResult", result);
     yield put({
       type: SEARCH_WORD_SUCCESS,
       payload: result.data.data,
@@ -29,5 +30,5 @@ function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
 }
 
 export function* searchSaga() {
-  yield throttle(100, SEARCH_WORD_REQUEST, searchWordSaga);
+  yield throttle(50, SEARCH_WORD_REQUEST, searchWordSaga);
 }

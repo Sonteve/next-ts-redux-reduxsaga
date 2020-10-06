@@ -1,4 +1,3 @@
-import { current } from "immer";
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { css } from "styled-components";
 import News from "./News";
