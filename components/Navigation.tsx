@@ -30,8 +30,18 @@ const Navigation = ({ onClickSearchButton }: Props) => {
 export default Navigation;
 
 const NavigationBlock = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 44px;
+  background: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 15px;
+
+  /* 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px; */
 `;

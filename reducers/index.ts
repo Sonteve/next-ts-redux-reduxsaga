@@ -3,7 +3,7 @@ import { AnyAction, combineReducers } from "redux";
 import search, { SearchState } from "./search";
 import inquire, { InquireState } from "./inquire";
 import media, { MediaState } from "./media";
-
+import wholePrice, { WholePriceState } from "./wholePrice";
 /* const rootReducer = combineReducers({
   search,
   inquire,
@@ -14,6 +14,7 @@ export type State = {
   search: SearchState;
   inquire: InquireState;
   media: MediaState;
+  wholePrice: WholePriceState;
 };
 const rootReducer = (state: State | undefined, action: AnyAction): State => {
   switch (action.type) {
@@ -25,6 +26,7 @@ const rootReducer = (state: State | undefined, action: AnyAction): State => {
         search,
         inquire,
         media,
+        wholePrice,
       });
       return combineReducer(state, action);
     }

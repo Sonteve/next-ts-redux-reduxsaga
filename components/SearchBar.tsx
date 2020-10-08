@@ -53,10 +53,11 @@ const SearchBar = ({ focus }: Props) => {
   );
 
   // 검색결과 아이템 클릭시 쿠키에 추가 및 라우팅
-  const onClickItem = useCallback((item: SearchItem) => {
+  const onClickItem = useCallback(async (item: SearchItem) => {
     setInput("");
     const prevSearchCookie: SearchCookie[] = cookie.load("search-cookie");
     console.log("클릭한 아이템", item);
+    // 검색 당시 정보 저장
     const newData = {
       Keyword: item.Keyword,
       ItemCode: item.ItemCode,
@@ -64,12 +65,21 @@ const SearchBar = ({ focus }: Props) => {
     };
     if (prevSearchCookie) {
       prevSearchCookie.map((v) => console.log(v));
+      // 중복 검색어 제거
       const data = prevSearchCookie.filter(
         (data) => data.Keyword !== newData.Keyword
       );
-      cookie.save("search-cookie", [newData, ...data], {
-        expires: getOneYearLater(),
-      });
+      if (data.length >= 5) {
+        // 쿠키 저장시 이전목록이 5개 이상이면 마지막데이터는 지워진다.
+        cookie.save("search-cookie", [newData, ...data.splice(0, 4)], {
+          expires: getOneYearLater(),
+        });
+      } else {
+        cookie.save("search-cookie", [newData, ...data], {
+          expires: getOneYearLater(),
+        });
+      }
+
       console.log("기존 쿠키에 새 데이터 추가");
     } else {
       cookie.save("search-cookie", [newData], {
@@ -78,9 +88,7 @@ const SearchBar = ({ focus }: Props) => {
       console.log("새 쿠키생성");
     }
     dispatch(setCurrentItem(item));
-    Router.replace(
-      `/product?keyword=${item.Keyword}&itemcode=${item.ItemCode}`
-    );
+    Router.push(`/product?keyword=${item.Keyword}&itemcode=${item.ItemCode}`);
   }, []);
 
   const onClickCloseButton = useCallback(() => {
@@ -95,6 +103,12 @@ const SearchBar = ({ focus }: Props) => {
       console.log("activeElement", activeElement);
       console.log("inputref", inputRef.current);
       if (activeElement === inputRef.current) {
+        // 클릭한것이 input이라면 이전검색 쿠키값 받아옴.
+        // 쿠키값을 받아오고 있다면 store에 그값을 추가해준다.
+        const prevSearch = cookie.load("search-cookie");
+        if (prevSearch) {
+          dispatch(setPrevSearchCookie(prevSearch));
+        }
         setSearchFocus(true);
       } else {
         setSearchFocus(false);
@@ -105,14 +119,6 @@ const SearchBar = ({ focus }: Props) => {
     return () => {
       document.removeEventListener("click", focusCheck);
     };
-  }, []);
-
-  // 페이지 접속시 이전 검색했던 쿠키값을 받아오고 있다면 store에 그값을 추가해준다.
-  useEffect(() => {
-    const prevSearch = cookie.load("search-cookie");
-    if (prevSearch) {
-      dispatch(setPrevSearchCookie(prevSearch));
-    }
   }, []);
 
   // 검색요청
@@ -202,7 +208,8 @@ const SearchForm = styled.form<SCProps>`
   ${(props) =>
     props.detail &&
     css`
-      position: absolute;
+      position: fixed;
+      top: 44px;
     `}
 `;
 

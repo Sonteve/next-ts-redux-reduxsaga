@@ -5,11 +5,10 @@ import SearchBar from "../components/SearchBar";
 import {
   setCurrentItem,
   searchFormInitAction,
-  getItemCodeMapAction,
+  /* getItemCodeMapAction, */
 } from "../reducers/search";
 import { useDispatch } from "react-redux";
 import MarketInfo from "../components/MarketInfo";
-import { wholePrice, retailPrice } from "../utils/dummy";
 import Footer from "../components/Footer";
 import Head from "next/head";
 import Navigation from "../components/Navigation";
@@ -19,6 +18,10 @@ import MediaTrend from "../components/MediaTrend";
 import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
 import { getNewsAction } from "../reducers/media";
+import {
+  getLastYearWholePriceAction,
+  getRecentWholePriceAction,
+} from "../reducers/wholePrice";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
@@ -38,9 +41,13 @@ function Detail() {
     console.log("Item : name ", keyword);
   }, [keyword]);
 
-  useEffect(() => {
+  /* useEffect(() => {
+    dispatch(getRecentWholePriceAction.request(itemcode as string));
+  }, []); */
+  /* useEffect(() => {
     console.log("router.query", router.query);
-  }, []);
+    dispatch(gMapAction.request(itemcode as string));
+  }, []); */
   return (
     <>
       <Head>
@@ -57,7 +64,6 @@ function Detail() {
           recent: "최신 도매 가격",
           prev: "전년 도매 가격",
         }}
-        wholePrice={wholePrice}
       />
       <WholeChart />
       <MarketInfo
@@ -65,7 +71,6 @@ function Detail() {
           recent: "최신 소비자 가격",
           prev: "전년 소비자 가격",
         }}
-        retailPrice={retailPrice}
       />
       <RetailChart />
       <MediaTrend />
@@ -76,37 +81,17 @@ function Detail() {
 
 export default Detail;
 
-/* export const getServerSideProps = wrapper.getServerSideProps(
-  async (context) => {
-
-    const state = context.store.getState();
-    if (state.search.currentItem?.ItemCode) {
-      context.store.dispatch(
-        getItemCodeMapAction.request(state.search.currentItem?.ItemCode)
-      );
-    }
-
-    context.store.dispatch(
-      getNewsAction.request({
-        itemCode: 111,
-        start: 0,
-        countPerPage: 5,
-      })
-    );
-    context.store.dispatch(END);
-    await context.store.sagaTask.toPromise();
-    return { props: {} };
-  }
-); */
-
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
+    const ItemCode = context.query.itemcode as string;
+    const Keyword = context.query.keyword as string;
     context.store.dispatch(
       setCurrentItem({
-        ItemCode: context.query.itemcode as string,
-        Keyword: context.query.keyword as string,
+        ItemCode,
+        Keyword,
       })
     );
+
     context.store.dispatch(
       getNewsAction.request({
         itemCode: 111,
@@ -114,6 +99,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
         countPerPage: 5,
       })
     );
+
+    context.store.dispatch(getRecentWholePriceAction.request(ItemCode));
+    context.store.dispatch(getLastYearWholePriceAction.request(ItemCode));
 
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
@@ -122,6 +110,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const ItemImageWrapper = styled.div`
+  margin-top: 44px;
   padding: 15px;
   background: #eee;
   display: flex;

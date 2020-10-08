@@ -5,11 +5,15 @@ import {
   SEARCH_WORD_REQUEST,
   SEARCH_WORD_SUCCESS,
   SEARCH_WORD_FAILURE,
+  /* getItemCodeMapAction,
+  GET_ITEM_CODE_MAP_REQUEST,
+  GET_ITEM_CODE_MAP_SUCCESS,
+  GET_ITEM_CODE_MAP_FAILURE, */
 } from "../reducers/search";
 import axios from "axios";
 
 function searchWordAPI(data: string) {
-  return axios.get(`/v2/code/std-item-codes?query=${data}&countPerPage=5`);
+  return axios.get(`/v2/code/std-item-codes?query=${data}`);
 }
 
 function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
@@ -31,4 +35,5 @@ function* searchWordSaga(action: ActionType<typeof searchWordAction.request>) {
 
 export function* searchSaga() {
   yield throttle(50, SEARCH_WORD_REQUEST, searchWordSaga);
+  /* yield takeLatest(GET_ITEM_CODE_MAP_REQUEST, getItemCodeMapSaga); */
 }

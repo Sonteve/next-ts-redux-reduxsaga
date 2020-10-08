@@ -1,137 +1,82 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { WholePriceDatas, RetailPriceDatas } from "../interfaces/dummy";
+import { RootState } from "../reducers";
+
+interface PriceItem {
+  date: string;
+  name: string;
+  unit: string;
+  firstGradePrice: number;
+  secondGradePrice: number;
+}
 
 interface Props {
   title: {
     recent: string;
     prev: string;
   };
-  wholePrice?: WholePriceDatas;
-  retailPrice?: RetailPriceDatas;
 }
 
-const MarketInfo = ({ title, wholePrice, retailPrice }: Props) => {
+const MarketInfo = ({ title }: Props) => {
+  const [processedData, setProcessedData] = useState<PriceItem[]>();
+  const { recentPriceData } = useSelector(
+    ({ wholePrice }: RootState) => wholePrice
+  );
+  const getProcessedData = () => {
+    const list: PriceItem[] = [];
+    recentPriceData?.map((ele, stdIndex) => {
+      const result = recentPriceData.filter((data, itemIndex) => {
+        if (
+          data.ExaminItemCode === ele.ExaminItemCode &&
+          data.ExaminGradeCode !== ele.ExaminGradeCode &&
+          itemIndex > stdIndex
+        ) {
+          return data;
+        }
+      });
+      if (result && result[0]) {
+        list.push({
+          date: ele.ExaminDate,
+          name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
+          unit: `(${ele.ExaminUnitName})`,
+          firstGradePrice: ele.Price,
+          secondGradePrice: result[0].Price,
+        });
+      }
+    });
+    console.log(list);
+    setProcessedData(list);
+  };
+  useEffect(() => {
+    if (recentPriceData) {
+      getProcessedData();
+    }
+  }, [recentPriceData]);
   return (
     <MarketInfoBlock>
-      {wholePrice && (
+      {processedData && (
         <>
           <TableBlock>
             <TableTitle>
               <span>{title.recent}</span>
-              <span> 2020.00.00</span>
+              <span> {processedData[0].date}</span>
             </TableTitle>
-            {wholePrice.recent && (
+            {processedData && (
               <>
                 <TableHeader>
                   <div>품종</div>
                   <div>상급</div>
                   <div>중급</div>
                 </TableHeader>
-                {wholePrice.recent.map((data, index) => (
-                  <TableRow key={index}>
+                {processedData.map((data) => (
+                  <TableRow key={data.name}>
                     <Unit>
-                      <span>{data.kind}</span>
-                      <span>{`(${data.unit})`}</span>
+                      <span>{data.name}</span>
+                      <span>{data.unit}</span>
                     </Unit>
-                    {}
-                    <div>{data.high ? data.high : "-"}</div>
-                    <div>{data.middle ? data.middle : "-"}</div>
-                  </TableRow>
-                ))}
-              </>
-            )}
-          </TableBlock>
-          <TableBlock>
-            <TableTitle>
-              <span>{title.prev}</span>
-              <span> 2020.00.00</span>
-            </TableTitle>
-            {wholePrice.prev && (
-              <>
-                <TableHeader>
-                  <div>품종</div>
-                  <div>상급</div>
-                  <div>중급</div>
-                </TableHeader>
-                {wholePrice.prev.map((data, index) => (
-                  <TableRow key={index}>
-                    <Unit>
-                      <span>{data.kind}</span>
-                      <span>{`(${data.unit})`}</span>
-                    </Unit>
-                    <div>{data.high ? data.high : "-"}</div>
-                    <div>{data.middle ? data.middle : "-"}</div>
-                  </TableRow>
-                ))}
-              </>
-            )}
-          </TableBlock>
-        </>
-      )}
-      {retailPrice && (
-        <>
-          <TableBlock>
-            <TableTitle>
-              <span>{title.recent}</span>
-              <span> 2020.00.00</span>
-            </TableTitle>
-            {retailPrice.recent && (
-              <>
-                <TableHeader>
-                  <div>품종</div>
-                  <div>상급</div>
-                  <div>중급</div>
-                </TableHeader>
-                {retailPrice.recent.map((data, index) => (
-                  <TableRow key={index}>
-                    <Unit>
-                      <span>{data.kind}</span>
-                      <span>{`(${data.unit})`}</span>
-                    </Unit>
-                    <div>
-                      {data.high?.min
-                        ? `${data.high.min}~${data.high?.max}`
-                        : "-"}
-                    </div>
-                    <div>
-                      {data.middle?.min
-                        ? `${data.middle.min}~${data.middle?.max}`
-                        : "-"}
-                    </div>
-                  </TableRow>
-                ))}
-              </>
-            )}
-          </TableBlock>
-          <TableBlock>
-            <TableTitle>
-              <span>{title.prev}</span>
-              <span> 2020.00.00</span>
-            </TableTitle>
-            {retailPrice.prev && (
-              <>
-                <TableHeader>
-                  <div>품종</div>
-                  <div>상급</div>
-                  <div>중급</div>
-                </TableHeader>
-                {retailPrice.prev.map((data, index) => (
-                  <TableRow key={index}>
-                    <Unit>
-                      <span>{data.kind}</span>
-                      <span>{`(${data.unit})`}</span>
-                    </Unit>
-                    <div>
-                      {data.high?.min
-                        ? `${data.high.min}~${data.high?.max}`
-                        : "-"}
-                    </div>
-                    <div>
-                      {data.middle?.min
-                        ? `${data.middle.min}~${data.middle?.max}`
-                        : "-"}
-                    </div>
+                    <div>{data.firstGradePrice}</div>
+                    <div>{data.secondGradePrice}</div>
                   </TableRow>
                 ))}
               </>
