@@ -11,7 +11,7 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   return (
     <>
       <Head>
-        <title>agripa</title>
+        <title>Agripa</title>
       </Head>
       <GlobalStyle></GlobalStyle>
       <Component {...pageProps} />

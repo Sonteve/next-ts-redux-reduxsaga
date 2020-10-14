@@ -51,7 +51,7 @@ function Detail() {
   return (
     <>
       <Head>
-        <title>{keyword}</title>
+        <title>Agripa | {keyword}</title>
       </Head>
       <Navigation onClickSearchButton={onClickSearchButton} />
       {search && <SearchBar focus={search} />}
