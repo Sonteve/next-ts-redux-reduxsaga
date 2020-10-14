@@ -8,7 +8,8 @@ interface PriceItem {
   name: string;
   unit: string;
   firstGradePrice: number;
-  secondGradePrice: number;
+  secondGradePrice: number | null;
+  speciesName: string | null;
 }
 
 interface Props {
@@ -26,8 +27,9 @@ const MarketInfo = ({ title }: Props) => {
   const getProcessedData = () => {
     const list: PriceItem[] = [];
     recentPriceData?.map((ele, stdIndex) => {
-      const result = recentPriceData.filter((data, itemIndex) => {
-        if (
+      const result = recentPriceData.filter((data, itemIndex) => {         
+        if (          
+          data.ExaminSpeciesName === ele.ExaminSpeciesName &&
           data.ExaminItemCode === ele.ExaminItemCode &&
           data.ExaminGradeCode !== ele.ExaminGradeCode &&
           itemIndex > stdIndex
@@ -41,8 +43,22 @@ const MarketInfo = ({ title }: Props) => {
           name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
           unit: `(${ele.ExaminUnitName})`,
           firstGradePrice: ele.Price,
-          secondGradePrice: result[0].Price,
+          secondGradePrice: result[0].Price || null,
+          speciesName: ele.ExaminSpeciesName
         });
+      }else{
+        const check =list.filter(item => item.speciesName === ele.ExaminSpeciesName).length;        
+        if(check === 0 ){ // 품종 중복 없을시만 추가
+          list.push({
+            date: ele.ExaminDate,
+            name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
+            unit: `(${ele.ExaminUnitName})`,
+            firstGradePrice: ele.Price,
+            secondGradePrice: null,
+            speciesName: ele.ExaminSpeciesName
+          });
+        }
+        
       }
     });
     console.log(list);
@@ -69,8 +85,8 @@ const MarketInfo = ({ title }: Props) => {
                   <div>상급</div>
                   <div>중급</div>
                 </TableHeader>
-                {processedData.map((data) => (
-                  <TableRow key={data.name}>
+                {processedData.map((data,index) => (
+                  <TableRow key={index}>
                     <Unit>
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
