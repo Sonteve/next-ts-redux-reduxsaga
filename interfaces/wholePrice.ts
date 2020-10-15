@@ -1,4 +1,4 @@
-export interface RecentWholePrice {
+export interface WholePrice {
   ExaminDate: string;
   ExaminItemName: string;
   ExaminItemCode: string;
@@ -11,15 +11,32 @@ export interface RecentWholePrice {
   Price: number;
 }
 
-export interface LastYearWholePrice {
-  examinDate: string;
-  examinGradeCode: string;
-  examinGradeName: string;
-  examinItemCode: string;
-  examinItemName: string;
-  examinSpeciesCode: string;
-  examinSpeciesName: string;
-  examinUnit: string;
-  examinUnitName: string;
-  price: number;
+export interface ChartData {
+  StdItemCode: string;
+  RangeLabel: string[];
+  GraphLine: {
+    ExaminItemName: string;
+    ExaminSpeciesName: string;
+    ExaminUnitName: string;
+    ExaminGradeName: string;
+    PriceType: string;
+    GraphData: {
+      X: string;
+      Y: number;
+    }[];
+  }[];
+}
+
+export interface AuctionVolumeData {
+  StdItemCode: string;
+  RangeLabel: string[];
+  GraphLine: {
+    StdItemName: string;
+    StdSpeciesName: string;
+    StdGradeName: string;
+    GraphData: {
+      X: string;
+      Y: string;
+    }[];
+  }[];
 }

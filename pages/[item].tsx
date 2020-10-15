@@ -7,7 +7,7 @@ import {
   searchFormInitAction,
   /* getItemCodeMapAction, */
 } from "../reducers/search";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MarketInfo from "../components/MarketInfo";
 import Footer from "../components/Footer";
 import Head from "next/head";
@@ -17,16 +17,22 @@ import RetailChart from "../components/RetailChart";
 import MediaTrend from "../components/MediaTrend";
 import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
-import { getNewsAction } from "../reducers/media";
+import { getNewsAction, getYoutubeAction } from "../reducers/media";
 import {
+  getAuctionVolumeDataAction,
   getLastYearWholePriceAction,
   getRecentWholePriceAction,
+  getWholeChartDataAction,
 } from "../reducers/wholePrice";
+import { RootState } from "../reducers";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
 function Detail() {
   const dispatch = useDispatch();
+  const { recentPriceData, lastYearPriceData } = useSelector(
+    ({ wholePrice }: RootState) => wholePrice
+  );
   const [search, setSearch] = useState<boolean>(false);
   const router = useRouter();
   const { keyword, itemcode } = router.query;
@@ -41,13 +47,6 @@ function Detail() {
     console.log("Item : name ", keyword);
   }, [keyword]);
 
-  /* useEffect(() => {
-    dispatch(getRecentWholePriceAction.request(itemcode as string));
-  }, []); */
-  /* useEffect(() => {
-    console.log("router.query", router.query);
-    dispatch(gMapAction.request(itemcode as string));
-  }, []); */
   return (
     <>
       <Head>
@@ -64,6 +63,7 @@ function Detail() {
           recent: "최신 도매 가격",
           prev: "전년 도매 가격",
         }}
+        priceData={recentPriceData}
       />
       <WholeChart />
       <MarketInfo
@@ -71,6 +71,7 @@ function Detail() {
           recent: "최신 소비자 가격",
           prev: "전년 소비자 가격",
         }}
+        priceData={lastYearPriceData}
       />
       <RetailChart />
       <MediaTrend />
@@ -99,9 +100,18 @@ export const getServerSideProps = wrapper.getServerSideProps(
         countPerPage: 5,
       })
     );
+    context.store.dispatch(
+      getYoutubeAction.request({
+        itemCode: 111,
+        start: 0,
+        countPerPage: 5,
+      })
+    );
 
     context.store.dispatch(getRecentWholePriceAction.request(ItemCode));
     context.store.dispatch(getLastYearWholePriceAction.request(ItemCode));
+    context.store.dispatch(getWholeChartDataAction.request(ItemCode));
+    context.store.dispatch(getAuctionVolumeDataAction.request(ItemCode));
 
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();

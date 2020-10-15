@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../reducers";
+import { WholePrice } from "../interfaces/wholePrice";
 
 interface PriceItem {
   date: string;
@@ -17,18 +18,17 @@ interface Props {
     recent: string;
     prev: string;
   };
+  priceData: WholePrice[] | null;
 }
 
-const MarketInfo = ({ title }: Props) => {
+const MarketInfo = ({ title, priceData }: Props) => {
   const [processedData, setProcessedData] = useState<PriceItem[]>();
-  const { recentPriceData } = useSelector(
-    ({ wholePrice }: RootState) => wholePrice
-  );
+
   const getProcessedData = () => {
     const list: PriceItem[] = [];
-    recentPriceData?.map((ele, stdIndex) => {
-      const result = recentPriceData.filter((data, itemIndex) => {         
-        if (          
+    priceData?.map((ele, stdIndex) => {
+      const result = priceData.filter((data, itemIndex) => {
+        if (
           data.ExaminSpeciesName === ele.ExaminSpeciesName &&
           data.ExaminItemCode === ele.ExaminItemCode &&
           data.ExaminGradeCode !== ele.ExaminGradeCode &&
@@ -44,31 +44,33 @@ const MarketInfo = ({ title }: Props) => {
           unit: `(${ele.ExaminUnitName})`,
           firstGradePrice: ele.Price,
           secondGradePrice: result[0].Price || null,
-          speciesName: ele.ExaminSpeciesName
+          speciesName: ele.ExaminSpeciesName,
         });
-      }else{
-        const check =list.filter(item => item.speciesName === ele.ExaminSpeciesName).length;        
-        if(check === 0 ){ // 품종 중복 없을시만 추가
+      } else {
+        const check = list.filter(
+          (item) => item.speciesName === ele.ExaminSpeciesName
+        ).length;
+        if (check === 0) {
+          // 품종 중복 없을시만 추가
           list.push({
             date: ele.ExaminDate,
             name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
             unit: `(${ele.ExaminUnitName})`,
             firstGradePrice: ele.Price,
             secondGradePrice: null,
-            speciesName: ele.ExaminSpeciesName
+            speciesName: ele.ExaminSpeciesName,
           });
         }
-        
       }
     });
     console.log(list);
     setProcessedData(list);
   };
   useEffect(() => {
-    if (recentPriceData) {
+    if (priceData) {
       getProcessedData();
     }
-  }, [recentPriceData]);
+  }, [priceData]);
   return (
     <MarketInfoBlock>
       {processedData && (
@@ -85,7 +87,7 @@ const MarketInfo = ({ title }: Props) => {
                   <div>상급</div>
                   <div>중급</div>
                 </TableHeader>
-                {processedData.map((data,index) => (
+                {processedData.map((data, index) => (
                   <TableRow key={index}>
                     <Unit>
                       <span>{data.name}</span>

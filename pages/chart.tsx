@@ -51,8 +51,8 @@ const ChartPage = () => {
                 controlWrapperParams: {
                   /* state: {
                     range: {
-                      start: new Date(2020, 1, 9),
-                      end: new Date(20020, 9, 25),
+                      start: new Date(2020, 4, 1),
+                      end: new Date(20020, 6, 7),
                     },
                   }, */
                 },
