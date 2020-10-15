@@ -8,7 +8,8 @@ import {
   /* getItemCodeMapAction, */
 } from "../reducers/search";
 import { useDispatch, useSelector } from "react-redux";
-import MarketInfo from "../components/MarketInfo";
+import WholePriceInfo from "../components/WholePriceInfo";
+import RetailPriceInfo from "../components/RetailPriceInfo";
 import Footer from "../components/Footer";
 import Head from "next/head";
 import Navigation from "../components/Navigation";
@@ -24,15 +25,15 @@ import {
   getRecentWholePriceAction,
   getWholeChartDataAction,
 } from "../reducers/wholePrice";
-import { RootState } from "../reducers";
+import {
+  getLastYearRetailPriceAction,
+  getRecentRetailPriceAction,
+} from "../reducers/retailPrice";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
 function Detail() {
   const dispatch = useDispatch();
-  const { recentPriceData, lastYearPriceData } = useSelector(
-    ({ wholePrice }: RootState) => wholePrice
-  );
   const [search, setSearch] = useState<boolean>(false);
   const router = useRouter();
   const { keyword, itemcode } = router.query;
@@ -58,21 +59,9 @@ function Detail() {
       <ItemImageWrapper>
         <TestImg>{keyword}이미지</TestImg>
       </ItemImageWrapper>
-      <MarketInfo
-        title={{
-          recent: "최신 도매 가격",
-          prev: "전년 도매 가격",
-        }}
-        priceData={recentPriceData}
-      />
+      <WholePriceInfo />
       <WholeChart />
-      <MarketInfo
-        title={{
-          recent: "최신 소비자 가격",
-          prev: "전년 소비자 가격",
-        }}
-        priceData={lastYearPriceData}
-      />
+      <RetailPriceInfo />
       <RetailChart />
       <MediaTrend />
       <Footer />
@@ -110,6 +99,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
     context.store.dispatch(getRecentWholePriceAction.request(ItemCode));
     context.store.dispatch(getLastYearWholePriceAction.request(ItemCode));
+    context.store.dispatch(getRecentRetailPriceAction.request(ItemCode));
+    context.store.dispatch(getLastYearRetailPriceAction.request(ItemCode));
     context.store.dispatch(getWholeChartDataAction.request(ItemCode));
     context.store.dispatch(getAuctionVolumeDataAction.request(ItemCode));
 

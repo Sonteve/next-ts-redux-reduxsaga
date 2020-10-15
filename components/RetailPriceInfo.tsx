@@ -2,30 +2,41 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../reducers";
-import { WholePrice } from "../interfaces/wholePrice";
+import { RetailPrice } from "../interfaces/retailPrice";
 
-interface PriceItem {
+interface RetailPriceItem {
   date: string;
   name: string;
   unit: string;
-  firstGradePrice: number;
-  secondGradePrice: number | null;
+  firstGradePrice: {
+    MinPrice: number;
+    MaxPrice: number;
+  };
+  secondGradePrice: {
+    MinPrice: number;
+    MaxPrice: number;
+  } | null;
   speciesName: string | null;
 }
 
-interface Props {
+/* interface Props {
   title: {
-    recent: string;
-    prev: string;
+    recentTitle: "최신 도매 가격" | "최신 소비자 가격";
+    prevTitle: "전년 도매 가격" | "전년 소비자 자격";
   };
-  priceData: WholePrice[] | null;
-}
+} */
 
-const MarketInfo = ({ title, priceData }: Props) => {
-  const [processedData, setProcessedData] = useState<PriceItem[]>();
+const RetailPriceInfo = (/* { title, priceData }: Props */) => {
+  const [recentData, setRecentData] = useState<RetailPriceItem[]>();
+  const [prevData, setPrevData] = useState<RetailPriceItem[]>();
+  /* const [retailData, setRetailData]  */
+  const { recentPriceData, lastYearPriceData } = useSelector(
+    ({ retailPrice }: RootState) => retailPrice
+  );
 
-  const getProcessedData = () => {
-    const list: PriceItem[] = [];
+  const getRetailData = (priceData: RetailPrice[], type: "recent" | "prev") => {
+    console.log(priceData, type);
+    const list: RetailPriceItem[] = [];
     priceData?.map((ele, stdIndex) => {
       const result = priceData.filter((data, itemIndex) => {
         if (
@@ -42,8 +53,16 @@ const MarketInfo = ({ title, priceData }: Props) => {
           date: ele.ExaminDate,
           name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
           unit: `(${ele.ExaminUnitName})`,
-          firstGradePrice: ele.Price,
-          secondGradePrice: result[0].Price || null,
+          firstGradePrice:
+            {
+              MaxPrice: ele.MaxPrice,
+              MinPrice: ele.MinPrice,
+            } || null,
+          secondGradePrice:
+            {
+              MaxPrice: result[0].MaxPrice,
+              MinPrice: result[0].MinPrice,
+            } || null,
           speciesName: ele.ExaminSpeciesName,
         });
       } else {
@@ -56,7 +75,11 @@ const MarketInfo = ({ title, priceData }: Props) => {
             date: ele.ExaminDate,
             name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
             unit: `(${ele.ExaminUnitName})`,
-            firstGradePrice: ele.Price,
+            firstGradePrice:
+              {
+                MaxPrice: ele.MaxPrice,
+                MinPrice: ele.MinPrice,
+              } || null,
             secondGradePrice: null,
             speciesName: ele.ExaminSpeciesName,
           });
@@ -64,37 +87,75 @@ const MarketInfo = ({ title, priceData }: Props) => {
       }
     });
     console.log(list);
-    setProcessedData(list);
-  };
-  useEffect(() => {
-    if (priceData) {
-      getProcessedData();
+    if (type === "recent") {
+      setRecentData(list);
+    } else if (type === "prev") {
+      setPrevData(list);
     }
-  }, [priceData]);
+  };
+
+  useEffect(() => {
+    if (recentPriceData) {
+      getRetailData(recentPriceData, "recent");
+    }
+    if (lastYearPriceData) {
+      getRetailData(lastYearPriceData, "prev");
+    }
+  }, [recentPriceData, lastYearPriceData]);
+
   return (
     <MarketInfoBlock>
-      {processedData && (
+      {recentData && (
         <>
           <TableBlock>
             <TableTitle>
-              <span>{title.recent}</span>
-              <span> {processedData[0].date}</span>
+              <span>최신 소비자 가격</span>
+              <span> {recentData[0].date}</span>
             </TableTitle>
-            {processedData && (
+            {recentData && (
               <>
                 <TableHeader>
                   <div>품종</div>
                   <div>상급</div>
                   <div>중급</div>
                 </TableHeader>
-                {processedData.map((data, index) => (
+                {recentData.map((data, index) => (
                   <TableRow key={index}>
                     <Unit>
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
                     </Unit>
-                    <div>{data.firstGradePrice}</div>
-                    <div>{data.secondGradePrice}</div>
+                    <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
+                    <div>{`${data.secondGradePrice?.MinPrice}~${data.secondGradePrice?.MaxPrice}`}</div>
+                  </TableRow>
+                ))}
+              </>
+            )}
+          </TableBlock>
+        </>
+      )}
+      {prevData && (
+        <>
+          <TableBlock>
+            <TableTitle>
+              <span>작년 소비자 가격</span>
+              <span> {prevData[0].date}</span>
+            </TableTitle>
+            {prevData && (
+              <>
+                <TableHeader>
+                  <div>품종</div>
+                  <div>상급</div>
+                  <div>중급</div>
+                </TableHeader>
+                {prevData.map((data, index) => (
+                  <TableRow key={index}>
+                    <Unit>
+                      <span>{data.name}</span>
+                      <span>{data.unit}</span>
+                    </Unit>
+                    <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
+                    <div>{`${data.secondGradePrice?.MinPrice}~${data.secondGradePrice?.MaxPrice}`}</div>
                   </TableRow>
                 ))}
               </>
@@ -106,7 +167,7 @@ const MarketInfo = ({ title, priceData }: Props) => {
   );
 };
 
-export default MarketInfo;
+export default RetailPriceInfo;
 
 const TableTitle = styled.div`
   display: flex;

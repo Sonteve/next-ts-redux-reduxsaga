@@ -49,7 +49,7 @@ const WholeChart = () => {
       </ChartBlock>
       <ChartBlock>
         <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
-        <ChartCanvas></ChartCanvas>
+        {/* <ChartCanvas></ChartCanvas> */}
         <DataChartBlock>
           {auctionData && auctionVolumeData && (
             <>

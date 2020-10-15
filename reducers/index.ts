@@ -4,6 +4,7 @@ import search, { SearchState } from "./search";
 import inquire, { InquireState } from "./inquire";
 import media, { MediaState } from "./media";
 import wholePrice, { WholePriceState } from "./wholePrice";
+import retailPrice, { RetailPriceState } from "./retailPrice";
 /* const rootReducer = combineReducers({
   search,
   inquire,
@@ -15,6 +16,7 @@ export type State = {
   inquire: InquireState;
   media: MediaState;
   wholePrice: WholePriceState;
+  retailPrice: RetailPriceState;
 };
 const rootReducer = (state: State | undefined, action: AnyAction): State => {
   switch (action.type) {
@@ -27,6 +29,7 @@ const rootReducer = (state: State | undefined, action: AnyAction): State => {
         inquire,
         media,
         wholePrice,
+        retailPrice,
       });
       return combineReducer(state, action);
     }

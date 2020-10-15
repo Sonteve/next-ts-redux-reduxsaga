@@ -3,10 +3,17 @@ import { searchSaga } from "./search";
 import { inquireSaga } from "./inquire";
 import { mediaSaga } from "./media";
 import { wholePriceSaga } from "./wholePrice";
+import { retailPriceSaga } from "./retailPrice";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://tapi.agripa.kr";
 
 export function* rootSaga() {
-  yield all([searchSaga(), inquireSaga(), mediaSaga(), wholePriceSaga()]);
+  yield all([
+    searchSaga(),
+    inquireSaga(),
+    mediaSaga(),
+    wholePriceSaga(),
+    retailPriceSaga(),
+  ]);
 }
