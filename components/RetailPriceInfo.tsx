@@ -83,6 +83,7 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
             secondGradePrice: null,
             speciesName: ele.ExaminSpeciesName,
           });
+          console.log("retailList", list);
         }
       }
     });
@@ -126,7 +127,12 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       <span>{data.unit}</span>
                     </Unit>
                     <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
-                    <div>{`${data.secondGradePrice?.MinPrice}~${data.secondGradePrice?.MaxPrice}`}</div>
+
+                    <div>
+                      {data.secondGradePrice
+                        ? `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`
+                        : ""}
+                    </div>
                   </TableRow>
                 ))}
               </>
@@ -155,7 +161,11 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       <span>{data.unit}</span>
                     </Unit>
                     <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
-                    <div>{`${data.secondGradePrice?.MinPrice}~${data.secondGradePrice?.MaxPrice}`}</div>
+                    <div>
+                      {data.secondGradePrice
+                        ? `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`
+                        : ""}
+                    </div>
                   </TableRow>
                 ))}
               </>
