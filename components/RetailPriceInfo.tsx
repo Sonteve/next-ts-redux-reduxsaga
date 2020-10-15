@@ -236,6 +236,4 @@ const TableBlock = styled.div`
   }
 `;
 
-const MarketInfoBlock = styled.div`
-  padding: 10px;
-`;
+const MarketInfoBlock = styled.div``;

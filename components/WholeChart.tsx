@@ -16,8 +16,11 @@ const WholeChart = () => {
   const [auctionData, setAuctionData] = useState<any>();
 
   useEffect(() => {
-    wholeChartData && setChartData(getChartTemplate(wholeChartData));
+    wholeChartData &&
+      wholeChartData.GraphLine &&
+      setChartData(getChartTemplate(wholeChartData));
     auctionVolumeData &&
+      auctionVolumeData.GraphLine &&
       setAuctionData(getAuctionVolumeChartTemplate(auctionVolumeData));
   }, [wholeChartData, auctionVolumeData]);
 
@@ -26,12 +29,12 @@ const WholeChart = () => {
     console.log("auctionData", auctionData);
   }, [chartData, auctionData]);
   return (
-    <WholeChartBlock>
-      <ChartBlock>
-        <ChartTitle>도매 가격 추이</ChartTitle>
-        <DataChartBlock>
-          {chartData && wholeChartData && (
-            <>
+    <>
+      {chartData && wholeChartData && (
+        <>
+          <ChartBlock>
+            <ChartTitle>도매 가격 추이</ChartTitle>
+            <DataChartBlock>
               <Line data={chartData.data} options={chartData.options} />
               <RangeLabelBlock>
                 <RangeLabel>{wholeChartData.RangeLabel[0]}</RangeLabel>
@@ -43,16 +46,15 @@ const WholeChart = () => {
                   }
                 </RangeLabel>
               </RangeLabelBlock>
-            </>
-          )}
-        </DataChartBlock>
-      </ChartBlock>
-      <ChartBlock>
-        <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
-        {/* <ChartCanvas></ChartCanvas> */}
-        <DataChartBlock>
-          {auctionData && auctionVolumeData && (
-            <>
+            </DataChartBlock>
+          </ChartBlock>
+        </>
+      )}
+      {auctionData && auctionVolumeData && (
+        <>
+          <ChartBlock>
+            <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
+            <DataChartBlock>
               <Bar data={auctionData.data} options={auctionData.options} />
               <RangeLabelBlock>
                 <RangeLabel>{auctionVolumeData.RangeLabel[0]}</RangeLabel>
@@ -64,11 +66,11 @@ const WholeChart = () => {
                   }
                 </RangeLabel>
               </RangeLabelBlock>
-            </>
-          )}
-        </DataChartBlock>
-      </ChartBlock>
-    </WholeChartBlock>
+            </DataChartBlock>
+          </ChartBlock>
+        </>
+      )}
+    </>
   );
 };
 
