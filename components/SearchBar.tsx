@@ -94,6 +94,7 @@ const SearchBar = ({ focus }: Props) => {
   const onClickCloseButton = useCallback(() => {
     console.log("닫힘");
     setSearchFocus(false);
+    setInput("");
   }, []);
 
   // 현재 페이지내부에 어디를 클릭했는지를 확인하는 이벤트핸들러

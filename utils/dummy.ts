@@ -1,6 +1,5 @@
 import moment from "moment";
 moment.locale("ko");
-import Chart from "chart.js";
 
 var colorArray = [
   "#FF6633",
@@ -54,12 +53,6 @@ var colorArray = [
   "#99E6E6",
   "#6666FF",
 ];
-
-interface StackedData {
-  dates: string[];
-  dataPack1: number[];
-  dataPack2: number[];
-}
 
 const dates = [
   "May 1",
@@ -183,12 +176,13 @@ export const stackedData = {
       ],
       yAxes: [
         {
+          display: false,
           stacked: true,
-          ticks: {
+          /* ticks: {
             callback: function (value: any) {
               return numberWithCommas(value);
             },
-          },
+          }, */
         },
       ],
     }, // scales

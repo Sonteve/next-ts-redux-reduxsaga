@@ -37,14 +37,12 @@ const MediaTrend = () => {
   const onClickTabItem = useCallback((currentTab: string) => {
     setCurrentTab(currentTab);
   }, []);
-  const { news, getNewsDone, youtube, getYoutubeDone } = useSelector(
-    ({ media }: RootState) => ({
-      news: media.news,
-      getNewsDone: media.getNewsDone,
-      youtube: media.youtube,
-      getYoutubeDone: media.getYoutubeDone,
-    })
-  );
+  const { news, youtube } = useSelector(({ media }: RootState) => ({
+    news: media.news,
+    getNewsDone: media.getNewsDone,
+    youtube: media.youtube,
+    getYoutubeDone: media.getYoutubeDone,
+  }));
 
   useEffect(() => {
     console.log("currentTab", currentTab);

@@ -7,7 +7,7 @@ import {
   searchFormInitAction,
   /* getItemCodeMapAction, */
 } from "../reducers/search";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import WholePriceInfo from "../components/WholePriceInfo";
 import RetailPriceInfo from "../components/RetailPriceInfo";
 import Footer from "../components/Footer";
@@ -20,7 +20,7 @@ import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
 import { getNewsAction, getYoutubeAction } from "../reducers/media";
 import {
-  getAuctionVolumeDataAction,
+  /* getAuctionVolumeDataAction, */
   getLastYearWholePriceAction,
   getRecentWholePriceAction,
   getWholeChartDataAction,
@@ -30,8 +30,12 @@ import {
   getRecentRetailPriceAction,
   getRetailChartDataAction,
 } from "../reducers/retailPrice";
-import { RootState } from "../reducers";
 import ContentReady from "../components/ContentReady";
+import ImportExport from "../components/ImportExport";
+import {
+  getImportDataAction,
+  getExportDataAction,
+} from "../reducers/importExport";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
@@ -40,23 +44,6 @@ function Detail() {
   const router = useRouter();
   const { keyword } = router.query;
   const [search, setSearch] = useState<boolean>(false);
-  const {
-    wholeRecent,
-    wholePrev,
-    wholeChart,
-    auctionChart,
-    retailRecent,
-    retailPrev,
-    retailChart,
-  } = useSelector(({ wholePrice, retailPrice }: RootState) => ({
-    wholeRecent: wholePrice.recentPriceDataDone,
-    wholePrev: wholePrice.lastYearPriceDataDone,
-    wholeChart: wholePrice.wholeChartDataDone,
-    auctionChart: wholePrice.auctionVolumeDataDone,
-    retailRecent: retailPrice.recentPriceDataDone,
-    retailPrev: retailPrice.lastYearPriceDataDone,
-    retailChart: retailPrice.retailChartDataDone,
-  }));
 
   const onClickSearchButton = useCallback(() => {
     setSearch((prev) => !prev);
@@ -79,20 +66,12 @@ function Detail() {
       <ItemImageWrapper>
         <TestImg>{keyword}이미지</TestImg>
       </ItemImageWrapper>
-      {
-        // 모든 데이터 없을때 정보 준비중 표시
-        !wholeRecent &&
-          !wholePrev &&
-          !wholeChart &&
-          !auctionChart &&
-          !retailRecent &&
-          !retailPrev &&
-          !retailChart && <ContentReady />
-      }
+      <ContentReady />
       <WholePriceInfo />
       <WholeChart />
       <RetailPriceInfo />
       <RetailChart />
+      <ImportExport />
       <MediaTrend />
       <Footer />
     </>
@@ -134,6 +113,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
     context.store.dispatch(getRecentRetailPriceAction.request(ItemCode));
     context.store.dispatch(getLastYearRetailPriceAction.request(ItemCode));
     context.store.dispatch(getRetailChartDataAction.request(ItemCode));
+    context.store.dispatch(getImportDataAction.request(ItemCode));
+    context.store.dispatch(getExportDataAction.request(ItemCode));
 
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();

@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
+import { useDispatch } from "react-redux";
 import { getMoreNewsAction } from "../reducers/media";
 import moment from "moment";
 import MoreMediaButton from "./MoreMediaButton";

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import News from "../components/News";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
 import { getNewsAction } from "../reducers/media";

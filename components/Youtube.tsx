@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import { getYoutubeAction, getMoreYoutubeAction } from "../reducers/media";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
+import { getMoreYoutubeAction } from "../reducers/media";
+import { useDispatch } from "react-redux";
 import moment from "moment";
 import MoreMediaButton from "./MoreMediaButton";
 import { useRouter } from "next/router";

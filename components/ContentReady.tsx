@@ -5,6 +5,8 @@ import styled from "styled-components";
 import Inquire from "./Inquire";
 import { useDispatch } from "react-redux";
 import { initInquire } from "../reducers/inquire";
+import { RootState } from "../reducers";
+import { useSelector } from "react-redux";
 
 const ContentReadyBlock = styled.div`
   margin: 15px;
@@ -29,6 +31,24 @@ const ContentReady = () => {
   const dispatch = useDispatch();
   const [inquire, setInquire] = useState(false);
 
+  const {
+    wholeRecent,
+    wholePrev,
+    wholeChart,
+    auctionChart,
+    retailRecent,
+    retailPrev,
+    retailChart,
+  } = useSelector(({ wholePrice, retailPrice }: RootState) => ({
+    wholeRecent: wholePrice.recentPriceDataDone,
+    wholePrev: wholePrice.lastYearPriceDataDone,
+    wholeChart: wholePrice.wholeChartDataDone,
+    auctionChart: wholePrice.auctionVolumeDataDone,
+    retailRecent: retailPrice.recentPriceDataDone,
+    retailPrev: retailPrice.lastYearPriceDataDone,
+    retailChart: retailPrice.retailChartDataDone,
+  }));
+
   const onClickInquire = useCallback(() => {
     console.log("문의하기");
     setInquire(true);
@@ -47,6 +67,18 @@ const ContentReady = () => {
       document.body.style.overflow = "visible ";
     }
   });
+
+  if (
+    wholeRecent ||
+    wholePrev ||
+    wholeChart ||
+    auctionChart ||
+    retailRecent ||
+    retailPrev ||
+    retailChart
+  ) {
+    return null;
+  }
 
   return (
     <ContentReadyBlock>

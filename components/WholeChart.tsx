@@ -93,7 +93,7 @@ const WholeChart = () => {
 
 export default WholeChart;
 
-const WholeChartBlock = styled.div``;
+/* const WholeChartBlock = styled.div``; */
 
 const ChartTitle = styled.div`
   display: flex;
@@ -105,7 +105,8 @@ const ChartBlock = styled.div`
 `;
 
 const DataChartBlock = styled.div`
-  height: 400px;
+  height: auto;
+  min-height: 150px;
   margin-bottom: 4rem;
 `;
 
