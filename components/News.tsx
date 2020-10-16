@@ -6,20 +6,27 @@ import { RootState } from "../reducers";
 import { getMoreNewsAction } from "../reducers/media";
 import moment from "moment";
 import MoreMediaButton from "./MoreMediaButton";
+import { useRouter } from "next/router";
+import { News as NewsData } from "../interfaces/media";
 
-const News = () => {
+interface Props {
+  datas: NewsData | null;
+}
+
+const News = ({ datas }: Props) => {
   const dispatch = useDispatch();
-  const { news } = useSelector(({ media }: RootState) => media);
   const [visible, setVisible] = useState<boolean>(true);
-  const newsData = news?.data;
-  const meta = news?.meta;
+  const newsData = datas?.data;
+  const meta = datas?.meta;
+  const router = useRouter();
+  const itemCode = router.query.itemcode as string;
 
   const getMoreNewsData = useCallback(() => {
     if (!newsData || !meta) return;
     if (newsData.length + 5 > meta.totalCount) {
       dispatch(
         getMoreNewsAction.request({
-          itemCode: 111,
+          itemCode,
           start: meta.startIndex + 5,
           countPerPage: meta.totalCount - meta.startIndex,
         })
@@ -28,7 +35,7 @@ const News = () => {
     } else {
       dispatch(
         getMoreNewsAction.request({
-          itemCode: 111,
+          itemCode,
           start: meta.startIndex + 5,
           countPerPage: 5,
         })

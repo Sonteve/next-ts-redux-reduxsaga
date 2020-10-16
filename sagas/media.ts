@@ -24,9 +24,9 @@ import moment from "moment";
 function getNewsAPI(data: MediaParams) {
   const { itemCode, start, countPerPage } = data;
   return axios.get(
-    `http://tapi.agripa.kr/media/news?itemCode=${itemCode}&baseDateTime=${moment().format(
+    `http://tapi.agripa.kr/v2/media/news?std-item-code=${itemCode}&base-date-time=${moment().format(
       "YYYY-MM-DD HH:mm:ss"
-    )}&start=${start}&countPerPage=${countPerPage}`
+    )}&start=${start}&count-per-page=${countPerPage}`
   );
 }
 
@@ -35,7 +35,7 @@ function* getNewsSaga(action: ReturnType<typeof getNewsAction.request>) {
     const result = yield call(getNewsAPI, action.payload);
     yield put({
       type: GET_NEWS_SUCCESS,
-      payload: result.data,
+      payload: result.data.data.length === 0 ? null : result.data,
     });
   } catch (error) {
     yield put({
@@ -47,10 +47,16 @@ function* getNewsSaga(action: ReturnType<typeof getNewsAction.request>) {
 
 function getYoutubeAPI(data: MediaParams) {
   const { itemCode, start, countPerPage } = data;
-  return axios.get(
-    `http://tapi.agripa.kr/media/youtube?itemCode=${itemCode}&baseDateTime=${moment().format(
+  console.log("itemCode", itemCode);
+  console.log(
+    `http://tapi.agripa.kr/v2/media/news?std-item-code=${itemCode}&base-date-time=${moment().format(
       "YYYY-MM-DD HH:mm:ss"
-    )}&start=${start}&countPerPage=${countPerPage}`
+    )}&start=${start}&count-per-page=${countPerPage}`
+  );
+  return axios.get(
+    `http://tapi.agripa.kr/v2/media/youtube?std-item-code=${itemCode}&base-date-time=${moment().format(
+      "YYYY-MM-DD HH:mm:ss"
+    )}&start=${start}&count-per-page=${countPerPage}`
   );
 }
 
@@ -59,7 +65,7 @@ function* getYoutubeSaga(action: ReturnType<typeof getYoutubeAction.request>) {
     const result = yield call(getYoutubeAPI, action.payload);
     yield put({
       type: GET_YOUTUBE_SUCCESS,
-      payload: result.data,
+      payload: result.data.data.length === 0 ? null : result.data,
     });
   } catch (error) {
     yield put({

@@ -81,8 +81,13 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
   [GET_NEWS_SUCCESS]: (state, action) =>
     produce(state, (draft) => {
       draft.getNewsLoading = false;
-      draft.getNewsDone = true;
       draft.news = action.payload;
+      draft.getNewsDone = true;
+      /* if (action.payload) {
+        draft.getNewsDone = true;
+      } else {
+        draft.getNewsDone = false;
+      } */
     }),
   [GET_NEWS_FAILURE]: (state, action) =>
     produce(state, (draft) => {
@@ -97,8 +102,13 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
   [GET_YOUTUBE_SUCCESS]: (state, action) =>
     produce(state, (draft) => {
       draft.getYoutubeLoading = false;
-      draft.getYoutubeDone = true;
       draft.youtube = action.payload;
+      draft.getYoutubeDone = true;
+      /* if (action.payload) {
+        draft.getYoutubeDone = true;  
+      } else {
+        draft.getYoutubeDone = false;
+      } */
     }),
   [GET_YOUTUBE_FAILURE]: (state, action) =>
     produce(state, (draft) => {

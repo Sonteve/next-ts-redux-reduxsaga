@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled, { css } from "styled-components";
 import News from "./News";
 import Youtube from "./Youtube";
+import { RootState } from "../reducers";
+import { useSelector } from "react-redux";
 
 const MediaTrendBlock = styled.div`
   padding: 0 15px;
@@ -35,10 +37,22 @@ const MediaTrend = () => {
   const onClickTabItem = useCallback((currentTab: string) => {
     setCurrentTab(currentTab);
   }, []);
+  const { news, getNewsDone, youtube, getYoutubeDone } = useSelector(
+    ({ media }: RootState) => ({
+      news: media.news,
+      getNewsDone: media.getNewsDone,
+      youtube: media.youtube,
+      getYoutubeDone: media.getYoutubeDone,
+    })
+  );
 
   useEffect(() => {
     console.log("currentTab", currentTab);
   }, [currentTab]);
+
+  if (!news && !youtube) {
+    return null;
+  }
   return (
     <MediaTrendBlock>
       <MediaTrendTitle>트랜드</MediaTrendTitle>
@@ -57,8 +71,8 @@ const MediaTrend = () => {
         </MediaTabItem>
       </MediaTabList>
       <MediaContents>
-        {currentTab === "news" && <News />}
-        {currentTab === "youtube" && <Youtube />}
+        {currentTab === "news" && <News datas={news} />}
+        {currentTab === "youtube" && <Youtube datas={youtube} />}
       </MediaContents>
     </MediaTrendBlock>
   );

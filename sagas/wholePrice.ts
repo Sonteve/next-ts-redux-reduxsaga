@@ -75,7 +75,7 @@ function* getWholeChartDataSaga(
     const result = yield call(getWholeChartDataAPI, action.payload);
     yield put({
       type: WHOLE_CHART_DATA_SUCCESS,
-      payload: result.data.data.length === 0 ? null : result.data.data,
+      payload: result.data.data.GraphLine ? result.data.data : null,
     });
   } catch (error) {
     yield put({
@@ -96,7 +96,7 @@ function* getAuctionVolumeDataSaga(
     const result = yield call(getAuctionVolumeDataAPI, action.payload);
     yield put({
       type: AUCTION_VOLUME_DATA_SUCCESS,
-      payload: result.data.data.length === 0 ? null : result.data.data,
+      payload: result.data.data.GraphLine ? result.data.data : null,
     });
   } catch (error) {
     yield put({

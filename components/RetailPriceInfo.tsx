@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../reducers";
-import { RetailPrice } from "../interfaces/retailPrice";
+import { RetailPrice } from "../interfaces/price";
 
 interface RetailPriceItem {
   date: string;
@@ -11,7 +11,7 @@ interface RetailPriceItem {
   firstGradePrice: {
     MinPrice: number;
     MaxPrice: number;
-  };
+  } | null;
   secondGradePrice: {
     MinPrice: number;
     MaxPrice: number;
@@ -27,14 +27,27 @@ interface RetailPriceItem {
 } */
 
 const RetailPriceInfo = (/* { title, priceData }: Props */) => {
-  const [recentData, setRecentData] = useState<RetailPriceItem[]>();
-  const [prevData, setPrevData] = useState<RetailPriceItem[]>();
+  const [recentData, setRecentData] = useState<RetailPriceItem[] | null>();
+  const [prevData, setPrevData] = useState<RetailPriceItem[] | null>();
   /* const [retailData, setRetailData]  */
   const { recentPriceData, lastYearPriceData } = useSelector(
     ({ retailPrice }: RootState) => retailPrice
   );
 
-  const getRetailData = (priceData: RetailPrice[], type: "recent" | "prev") => {
+  const getRetailData = (
+    priceData: RetailPrice[] | null,
+    type: "recent" | "prev"
+  ) => {
+    if (priceData === null && type === "recent") {
+      setRecentData(null);
+      return;
+    }
+
+    if (priceData === null && type === "prev") {
+      setPrevData(null);
+      return;
+    }
+
     console.log(priceData, type);
     const list: RetailPriceItem[] = [];
     priceData?.map((ele, stdIndex) => {
@@ -70,17 +83,26 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
           (item) => item.speciesName === ele.ExaminSpeciesName
         ).length;
         if (check === 0) {
+          console.log("ele", ele);
           // 품종 중복 없을시만 추가
           list.push({
             date: ele.ExaminDate,
             name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
             unit: `(${ele.ExaminUnitName})`,
             firstGradePrice:
-              {
-                MaxPrice: ele.MaxPrice,
-                MinPrice: ele.MinPrice,
-              } || null,
-            secondGradePrice: null,
+              ele.ExaminGradeCode === "1"
+                ? {
+                    MaxPrice: ele.MaxPrice,
+                    MinPrice: ele.MinPrice,
+                  }
+                : null,
+            secondGradePrice:
+              ele.ExaminGradeCode === "2"
+                ? {
+                    MaxPrice: ele.MaxPrice,
+                    MinPrice: ele.MinPrice,
+                  }
+                : null,
             speciesName: ele.ExaminSpeciesName,
           });
           console.log("retailList", list);
@@ -98,9 +120,13 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
   useEffect(() => {
     if (recentPriceData) {
       getRetailData(recentPriceData, "recent");
+    } else {
+      getRetailData(null, "recent");
     }
     if (lastYearPriceData) {
       getRetailData(lastYearPriceData, "prev");
+    } else {
+      getRetailData(null, "prev");
     }
   }, [recentPriceData, lastYearPriceData]);
 
@@ -126,12 +152,14 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
                     </Unit>
-                    <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
+                    <div>
+                      {data.firstGradePrice &&
+                        `${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}
+                    </div>
 
                     <div>
-                      {data.secondGradePrice
-                        ? `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`
-                        : ""}
+                      {data.secondGradePrice &&
+                        `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`}
                     </div>
                   </TableRow>
                 ))}
@@ -160,11 +188,13 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
                     </Unit>
-                    <div>{`${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}</div>
                     <div>
-                      {data.secondGradePrice
-                        ? `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`
-                        : ""}
+                      {data.firstGradePrice &&
+                        `${data.firstGradePrice.MinPrice}~${data.firstGradePrice.MaxPrice}`}
+                    </div>
+                    <div>
+                      {data.secondGradePrice &&
+                        `${data.secondGradePrice.MinPrice}~${data.secondGradePrice.MaxPrice}`}
                     </div>
                   </TableRow>
                 ))}

@@ -7,6 +7,7 @@ import {
 import { Line, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import { stackedData } from "../utils/dummy";
 
 const WholeChart = () => {
   const { wholeChartData, auctionVolumeData } = useSelector(
@@ -16,18 +17,19 @@ const WholeChart = () => {
   const [auctionData, setAuctionData] = useState<any>();
 
   useEffect(() => {
-    wholeChartData &&
-      wholeChartData.GraphLine &&
-      setChartData(getChartTemplate(wholeChartData));
-    auctionVolumeData &&
-      auctionVolumeData.GraphLine &&
-      setAuctionData(getAuctionVolumeChartTemplate(auctionVolumeData));
+    wholeChartData && wholeChartData.GraphLine
+      ? setChartData(getChartTemplate(wholeChartData))
+      : setChartData(null);
+    auctionVolumeData && auctionVolumeData.GraphLine
+      ? setAuctionData(getAuctionVolumeChartTemplate(auctionVolumeData))
+      : setAuctionData(null);
   }, [wholeChartData, auctionVolumeData]);
 
   useEffect(() => {
     console.log("chartData", chartData);
     console.log("auctionData", auctionData);
   }, [chartData, auctionData]);
+
   return (
     <>
       {chartData && wholeChartData && (
@@ -37,39 +39,54 @@ const WholeChart = () => {
             <DataChartBlock>
               <Line data={chartData.data} options={chartData.options} />
               <RangeLabelBlock>
-                <RangeLabel>{wholeChartData.RangeLabel[0]}</RangeLabel>
                 <RangeLabel>
-                  {
+                  {wholeChartData.RangeLabel && wholeChartData.RangeLabel[0]}
+                </RangeLabel>
+                <RangeLabel>
+                  {wholeChartData.RangeLabel &&
                     wholeChartData.RangeLabel[
                       wholeChartData.RangeLabel.length - 1
-                    ]
-                  }
+                    ]}
                 </RangeLabel>
               </RangeLabelBlock>
             </DataChartBlock>
           </ChartBlock>
         </>
       )}
-      {auctionData && auctionVolumeData && (
+      {stackedData && (
+        <>
+          <ChartBlock>
+            <ChartTitle>도매 가격 추이</ChartTitle>
+            <DataChartBlock>
+              <Bar data={stackedData.data} options={stackedData.options} />
+              {/* <Line data={chartData.data} options={chartData.options} /> */}
+            </DataChartBlock>
+          </ChartBlock>
+        </>
+      )}
+
+      {/* {auctionData && auctionVolumeData && (
         <>
           <ChartBlock>
             <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
             <DataChartBlock>
               <Bar data={auctionData.data} options={auctionData.options} />
               <RangeLabelBlock>
-                <RangeLabel>{auctionVolumeData.RangeLabel[0]}</RangeLabel>
                 <RangeLabel>
-                  {
+                  {auctionVolumeData.RangeLabel &&
+                    auctionVolumeData.RangeLabel[0]}
+                </RangeLabel>
+                <RangeLabel>
+                  {auctionVolumeData.RangeLabel &&
                     auctionVolumeData.RangeLabel[
                       auctionVolumeData.RangeLabel.length - 1
-                    ]
-                  }
+                    ]}
                 </RangeLabel>
               </RangeLabelBlock>
             </DataChartBlock>
           </ChartBlock>
         </>
-      )}
+      )} */}
     </>
   );
 };
@@ -85,13 +102,6 @@ const ChartTitle = styled.div`
 
 const ChartBlock = styled.div`
   padding: 10px;
-`;
-
-const ChartCanvas = styled.div`
-  width: 100%;
-  height: 200px;
-  background: #dbdbdb;
-  border-radius: 20px;
 `;
 
 const DataChartBlock = styled.div`

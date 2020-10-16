@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../reducers";
-import { WholePrice } from "../interfaces/wholePrice";
+import { WholePrice } from "../interfaces/price";
 
 interface PriceItem {
   date: string;
   name: string;
   unit: string;
-  firstGradePrice: number;
+  firstGradePrice: number | null;
   secondGradePrice: number | null;
   speciesName: string | null;
 }
@@ -21,14 +21,27 @@ interface PriceItem {
 } */
 
 const WholePriceInfo = (/* { title, priceData }: Props */) => {
-  const [recentData, setRecentData] = useState<PriceItem[]>();
-  const [prevData, setPrevData] = useState<PriceItem[]>();
+  const [recentData, setRecentData] = useState<PriceItem[] | null>();
+  const [prevData, setPrevData] = useState<PriceItem[] | null>();
   /* const [retailData, setRetailData]  */
   const { recentPriceData, lastYearPriceData } = useSelector(
     ({ wholePrice }: RootState) => wholePrice
   );
 
-  const getWholeData = (priceData: WholePrice[], type: "recent" | "prev") => {
+  const getWholeData = (
+    priceData: WholePrice[] | null,
+    type: "recent" | "prev"
+  ) => {
+    if (priceData === null && type === "recent") {
+      setRecentData(null);
+      return;
+    }
+
+    if (priceData === null && type === "prev") {
+      setPrevData(null);
+      return;
+    }
+
     console.log(priceData, type);
     const list: PriceItem[] = [];
     priceData?.map((ele, stdIndex) => {
@@ -61,8 +74,8 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
             date: ele.ExaminDate,
             name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
             unit: `(${ele.ExaminUnitName})`,
-            firstGradePrice: ele.Price,
-            secondGradePrice: null,
+            firstGradePrice: ele.ExaminGradeCode === "1" ? ele.Price : null,
+            secondGradePrice: ele.ExaminGradeCode === "2" ? ele.Price : null,
             speciesName: ele.ExaminSpeciesName,
           });
         }
@@ -79,9 +92,13 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
   useEffect(() => {
     if (recentPriceData) {
       getWholeData(recentPriceData, "recent");
+    } else {
+      getWholeData(null, "recent");
     }
     if (lastYearPriceData) {
       getWholeData(lastYearPriceData, "prev");
+    } else {
+      getWholeData(null, "prev");
     }
   }, [recentPriceData, lastYearPriceData]);
 

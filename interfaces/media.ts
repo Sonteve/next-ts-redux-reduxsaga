@@ -1,5 +1,5 @@
 export interface MediaParams {
-  itemCode: number;
+  itemCode: string;
   start: number;
   countPerPage: number;
 }

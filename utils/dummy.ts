@@ -1,5 +1,200 @@
 import moment from "moment";
 moment.locale("ko");
+import Chart from "chart.js";
+
+var colorArray = [
+  "#FF6633",
+  "#FFB399",
+  "#FF33FF",
+  "#FFFF99",
+  "#00B3E6",
+  "#E6B333",
+  "#3366E6",
+  "#999966",
+  "#99FF99",
+  "#B34D4D",
+  "#80B300",
+  "#809900",
+  "#E6B3B3",
+  "#6680B3",
+  "#66991A",
+  "#FF99E6",
+  "#CCFF1A",
+  "#FF1A66",
+  "#E6331A",
+  "#33FFCC",
+  "#66994D",
+  "#B366CC",
+  "#4D8000",
+  "#B33300",
+  "#CC80CC",
+  "#66664D",
+  "#991AFF",
+  "#E666FF",
+  "#4DB3FF",
+  "#1AB399",
+  "#E666B3",
+  "#33991A",
+  "#CC9999",
+  "#B3B31A",
+  "#00E680",
+  "#4D8066",
+  "#809980",
+  "#E6FF80",
+  "#1AFF33",
+  "#999933",
+  "#FF3380",
+  "#CCCC00",
+  "#66E64D",
+  "#4D80CC",
+  "#9900B3",
+  "#E64D66",
+  "#4DB380",
+  "#FF4D4D",
+  "#99E6E6",
+  "#6666FF",
+];
+
+interface StackedData {
+  dates: string[];
+  dataPack1: number[];
+  dataPack2: number[];
+}
+
+const dates = [
+  "May 1",
+  "May 2",
+  "May 3",
+  "May 4",
+  "May 5",
+  "May 6",
+  "May 7",
+  "May 8",
+  "May 9",
+  "May 10",
+  "May 11",
+  "May 12",
+];
+
+const datas = [
+  [
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+  ],
+  [
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+  ],
+  [
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+  ],
+  [
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+    Math.floor(Math.random() * 50000 + 10000),
+  ],
+];
+
+const numberWithCommas = function (x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+function getStackedData() {
+  const asd = datas.map((data, index) => ({
+    label: dates[index],
+    data: data,
+    backgroundColor: colorArray[index],
+    hoverBackgroundColor: colorArray[colorArray.length - index],
+    hoverBorderWidth: 2,
+    hoverBorderColor: "lightgrey",
+  }));
+
+  console.log("asd", asd);
+  return asd;
+}
+
+export const stackedData = {
+  data: {
+    labels: dates,
+    datasets: getStackedData(),
+  },
+  options: {
+    animation: {
+      duration: 10,
+    },
+    tooltips: {
+      mode: "label",
+      callbacks: {
+        label: function (tooltipItem: any, data: any) {
+          return (
+            data.datasets[tooltipItem.datasetIndex].label +
+            ": " +
+            numberWithCommas(tooltipItem.yLabel)
+          );
+        },
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          stacked: true,
+          gridLines: { display: false },
+        },
+      ],
+      yAxes: [
+        {
+          stacked: true,
+          ticks: {
+            callback: function (value: any) {
+              return numberWithCommas(value);
+            },
+          },
+        },
+      ],
+    }, // scales
+    legend: { display: true },
+  }, // options
+};
 
 export const testData = {
   data: {

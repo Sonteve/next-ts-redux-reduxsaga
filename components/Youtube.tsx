@@ -6,20 +6,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import moment from "moment";
 import MoreMediaButton from "./MoreMediaButton";
+import { useRouter } from "next/router";
+import { Youtube as YoutubeData } from "../interfaces/media";
 
-const Youtube = () => {
+interface Props {
+  datas: YoutubeData | null;
+}
+
+const Youtube = ({ datas }: Props) => {
   const dispatch = useDispatch();
-  const { youtube } = useSelector(({ media }: RootState) => media);
   const [visible, setVisible] = useState<boolean>(true);
-  const youtubeData = youtube?.data;
-  const meta = youtube?.meta;
+  const youtubeData = datas?.data;
+  const meta = datas?.meta;
+  const router = useRouter();
+  const itemCode = router.query.itemcode as string;
 
   const getMoreYoutubeData = useCallback(() => {
+    /* console.log("itemCode", itemCode); */
     if (!youtubeData || !meta) return;
     if (youtubeData.length + 5 > meta.totalCount) {
       dispatch(
         getMoreYoutubeAction.request({
-          itemCode: 111,
+          itemCode,
           start: meta.startIndex + 5,
           countPerPage: meta.totalCount - meta.startIndex,
         })
@@ -28,7 +36,7 @@ const Youtube = () => {
     } else {
       dispatch(
         getMoreYoutubeAction.request({
-          itemCode: 111,
+          itemCode,
           start: meta.startIndex + 5,
           countPerPage: 5,
         })
@@ -37,16 +45,16 @@ const Youtube = () => {
     console.log("more youtubeData");
   }, [youtubeData, meta]);
 
-  useEffect(() => {
-    if (youtube) return;
+  /* useEffect(() => {
+    if (datas) return;
     dispatch(
       getYoutubeAction.request({
-        itemCode: 111,
+        itemCode,
         start: 0,
         countPerPage: 5,
       })
     );
-  }, []);
+  }, []); */
 
   return (
     <YoutubeBlock>

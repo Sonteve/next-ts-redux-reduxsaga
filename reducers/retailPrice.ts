@@ -1,4 +1,4 @@
-import { RetailPrice } from "../interfaces/retailPrice";
+import { RetailPrice, ChartData } from "../interfaces/price";
 import { AxiosError } from "axios";
 import { ActionType, createAsyncAction, createReducer } from "typesafe-actions";
 import produce from "immer";
@@ -23,8 +23,20 @@ export const getLastYearRetailPriceAction = createAsyncAction(
   LAST_YEAR_RETAIL_PRICE_FAILURE
 )<string, RetailPrice[], AxiosError>();
 
+export const RETAIL_CHART_DATA_REQUEST = "RETAIL_CHART_DATA_REQUEST";
+export const RETAIL_CHART_DATA_SUCCESS = "RETAIL_CHART_DATA_SUCCESS";
+export const RETAIL_CHART_DATA_FAILURE = "RETAIL_CHART_DATA_FAILURE";
+
+export const getRetailChartDataAction = createAsyncAction(
+  RETAIL_CHART_DATA_REQUEST,
+  RETAIL_CHART_DATA_SUCCESS,
+  RETAIL_CHART_DATA_FAILURE
+)<string, ChartData, AxiosError>();
+
 export type RetailPriceAction = ActionType<
-  typeof getRecentRetailPriceAction | typeof getLastYearRetailPriceAction
+  | typeof getRecentRetailPriceAction
+  | typeof getLastYearRetailPriceAction
+  | typeof getRetailChartDataAction
 >;
 
 export interface RetailPriceState {
@@ -36,6 +48,10 @@ export interface RetailPriceState {
   lastYearPriceDataLoading: boolean;
   lastYearPriceDataDone: boolean;
   lastYearPriceDataError: AxiosError | null;
+  retailChartData: ChartData | null;
+  retailChartDataLoading: boolean;
+  retailChartDataDone: boolean;
+  retailChartDataError: AxiosError | null;
 }
 
 export const initialState: RetailPriceState = {
@@ -47,6 +63,10 @@ export const initialState: RetailPriceState = {
   lastYearPriceDataLoading: false,
   lastYearPriceDataDone: false,
   lastYearPriceDataError: null,
+  retailChartData: null,
+  retailChartDataLoading: false,
+  retailChartDataDone: false,
+  retailChartDataError: null,
 };
 
 const retailPrice = createReducer<RetailPriceState, RetailPriceAction>(
@@ -60,8 +80,12 @@ const retailPrice = createReducer<RetailPriceState, RetailPriceAction>(
     [RECENT_RETAIL_PRICE_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.recentPriceDataLoading = false;
-        draft.recentPriceDataDone = false;
         draft.recentPriceData = action.payload;
+        if (action.payload) {
+          draft.recentPriceDataDone = true;
+        } else {
+          draft.recentPriceDataDone = false;
+        }
       }),
     [RECENT_RETAIL_PRICE_FAILURE]: (state, action) =>
       produce(state, (draft) => {
@@ -76,13 +100,37 @@ const retailPrice = createReducer<RetailPriceState, RetailPriceAction>(
     [LAST_YEAR_RETAIL_PRICE_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.lastYearPriceDataLoading = false;
-        draft.lastYearPriceDataDone = false;
         draft.lastYearPriceData = action.payload;
+        if (action.payload) {
+          draft.lastYearPriceDataDone = true;
+        } else {
+          draft.lastYearPriceDataDone = false;
+        }
       }),
     [LAST_YEAR_RETAIL_PRICE_FAILURE]: (state, action) =>
       produce(state, (draft) => {
         draft.lastYearPriceDataLoading = false;
         draft.lastYearPriceDataError = action.payload;
+      }),
+    [RETAIL_CHART_DATA_REQUEST]: (state) =>
+      produce(state, (draft) => {
+        draft.retailChartDataLoading = true;
+        draft.retailChartDataError = null;
+      }),
+    [RETAIL_CHART_DATA_SUCCESS]: (state, action) =>
+      produce(state, (draft) => {
+        draft.retailChartDataLoading = false;
+        draft.retailChartData = action.payload;
+        if (action.payload) {
+          draft.retailChartDataDone = true;
+        } else {
+          draft.retailChartDataDone = false;
+        }
+      }),
+    [RETAIL_CHART_DATA_FAILURE]: (state, action) =>
+      produce(state, (draft) => {
+        draft.retailChartDataLoading = false;
+        draft.retailChartDataError = action.payload;
       }),
   }
 );

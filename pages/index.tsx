@@ -32,8 +32,6 @@ const Main = () => {
         <TestImg>Agripa</TestImg>
       </MainImageWrapper>
       <SearchBar />
-      <div>인기 뉴스</div>
-      <News />
       <Footer />
     </MainWrapper>
   );
@@ -45,7 +43,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
     context.store.dispatch(
       getNewsAction.request({
-        itemCode: 111,
+        itemCode: "0103",
         start: 0,
         countPerPage: 5,
       })

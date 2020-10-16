@@ -1,5 +1,5 @@
 import Chart from "chart.js";
-import { ChartData, AuctionVolumeData } from "../interfaces/wholePrice";
+import { ChartData, AuctionVolumeData } from "../interfaces/price";
 
 const dotColor = [
   "#567339",
@@ -129,6 +129,10 @@ export function getChartTemplate(datas: ChartData): any {
   Chart.pluginService.register({
     // plugin 이름 선택에 따라 canvas상에서의 z-index가 바뀌는 효과가 있다.
     afterDatasetDraw: function (chart: any, easing) {
+      if (chart.config.type === "bar") {
+        return;
+      }
+
       if (chart.tooltip._active && chart.tooltip._active.length) {
         const activePoint = chart.controller.tooltip._active[0];
         const ctx = chart.ctx;
@@ -284,29 +288,6 @@ export function getChartTemplate(datas: ChartData): any {
 }
 
 export function getAuctionVolumeChartTemplate(datas: AuctionVolumeData): any {
-  // 차트 세로선 그어주는 부분
-  Chart.pluginService.register({
-    // plugin 이름 선택에 따라 canvas상에서의 z-index가 바뀌는 효과가 있다.
-    afterDatasetDraw: function (chart: any, easing) {
-      if (chart.tooltip._active && chart.tooltip._active.length) {
-        const activePoint = chart.controller.tooltip._active[0];
-        const ctx = chart.ctx;
-        const x = activePoint.tooltipPosition().x;
-        const topY = chart.scales["y-axis-0"].top;
-        const bottomY = chart.scales["y-axis-0"].bottom;
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(x, topY);
-        ctx.lineTo(x, bottomY);
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "rgba(27,191,1,1)";
-        ctx.stroke();
-        ctx.restore();
-      }
-    },
-  });
-
   const lineData: any = [];
   const { RangeLabel } = datas;
   datas.GraphLine.map((line, index) => {

@@ -10,6 +10,10 @@ import {
   LAST_YEAR_RETAIL_PRICE_REQUEST,
   LAST_YEAR_RETAIL_PRICE_SUCCESS,
   LAST_YEAR_RETAIL_PRICE_FAILURE,
+  getRetailChartDataAction,
+  RETAIL_CHART_DATA_REQUEST,
+  RETAIL_CHART_DATA_SUCCESS,
+  RETAIL_CHART_DATA_FAILURE,
 } from "../reducers/retailPrice";
 
 function getRecentRetailPriceAPI(data: string) {
@@ -56,7 +60,29 @@ function* getLastYearRetailPriceSaga(
   }
 }
 
+function getRetailChartDataAPI(data: string) {
+  return axios.get(`http://tapi.agripa.kr/v2/retail/price/graph/${data}`);
+}
+
+function* getRetailChartDataSaga(
+  action: ActionType<typeof getRetailChartDataAction.request>
+) {
+  try {
+    const result = yield call(getRetailChartDataAPI, action.payload);
+    yield put({
+      type: RETAIL_CHART_DATA_SUCCESS,
+      payload: result.data.data.GraphLine ? result.data.data : null,
+    });
+  } catch (error) {
+    yield put({
+      type: RETAIL_CHART_DATA_FAILURE,
+      payload: error.response.data,
+    });
+  }
+}
+
 export function* retailPriceSaga() {
   yield takeLatest(RECENT_RETAIL_PRICE_REQUEST, getRecentRetailPriceSaga);
   yield takeLatest(LAST_YEAR_RETAIL_PRICE_REQUEST, getLastYearRetailPriceSaga);
+  yield takeLatest(RETAIL_CHART_DATA_REQUEST, getRetailChartDataSaga);
 }

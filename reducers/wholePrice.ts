@@ -1,8 +1,4 @@
-import {
-  WholePrice,
-  ChartData,
-  AuctionVolumeData,
-} from "../interfaces/wholePrice";
+import { WholePrice, ChartData, AuctionVolumeData } from "../interfaces/price";
 import { AxiosError } from "axios";
 import { ActionType, createAsyncAction, createReducer } from "typesafe-actions";
 import produce from "immer";
@@ -103,8 +99,12 @@ const wholePrice = createReducer<WholePriceState, WholePriceAction>(
     [RECENT_WHOLE_PRICE_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.recentPriceDataLoading = false;
-        draft.recentPriceDataDone = false;
         draft.recentPriceData = action.payload;
+        if (action.payload) {
+          draft.recentPriceDataDone = true;
+        } else {
+          draft.recentPriceDataDone = false;
+        }
       }),
     [RECENT_WHOLE_PRICE_FAILURE]: (state, action) =>
       produce(state, (draft) => {
@@ -119,8 +119,12 @@ const wholePrice = createReducer<WholePriceState, WholePriceAction>(
     [LAST_YEAR_WHOLE_PRICE_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.lastYearPriceDataLoading = false;
-        draft.lastYearPriceDataDone = false;
         draft.lastYearPriceData = action.payload;
+        if (action.payload) {
+          draft.lastYearPriceDataDone = true;
+        } else {
+          draft.lastYearPriceDataDone = false;
+        }
       }),
     [LAST_YEAR_WHOLE_PRICE_FAILURE]: (state, action) =>
       produce(state, (draft) => {
@@ -135,8 +139,12 @@ const wholePrice = createReducer<WholePriceState, WholePriceAction>(
     [WHOLE_CHART_DATA_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.wholeChartDataLoading = false;
-        draft.wholeChartDataDone = false;
         draft.wholeChartData = action.payload;
+        if (action.payload) {
+          draft.wholeChartDataDone = true;
+        } else {
+          draft.wholeChartDataDone = false;
+        }
       }),
     [WHOLE_CHART_DATA_FAILURE]: (state, action) =>
       produce(state, (draft) => {
@@ -151,8 +159,12 @@ const wholePrice = createReducer<WholePriceState, WholePriceAction>(
     [AUCTION_VOLUME_DATA_SUCCESS]: (state, action) =>
       produce(state, (draft) => {
         draft.auctionVolumeDataLoading = false;
-        draft.auctionVolumeDataDone = false;
         draft.auctionVolumeData = action.payload;
+        if (action.payload) {
+          draft.auctionVolumeDataDone = true;
+        } else {
+          draft.auctionVolumeDataDone = false;
+        }
       }),
     [AUCTION_VOLUME_DATA_FAILURE]: (state, action) =>
       produce(state, (draft) => {
