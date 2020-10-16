@@ -81,7 +81,8 @@ const ChartBlock = styled.div`
 `;
 
 const DataChartBlock = styled.div`
-  height: 400px;
+  height: auto;
+  min-height: 150px;
   margin-bottom: 4rem;
 `;
 
