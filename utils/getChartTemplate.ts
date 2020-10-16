@@ -205,8 +205,8 @@ export function getChartTemplate(datas: ChartData): any {
       datasets: lineData,
     },
     options: {
-      maintainAspectRatio: false,
-      cutoutPercentage: 50,
+      /* maintainAspectRatio: true,
+      cutoutPercentage: 50, */
 
       animation: {
         tension: {
@@ -348,8 +348,8 @@ export function getAuctionVolumeChartTemplate(datas: AuctionVolumeData): any {
       datasets: lineData,
     },
     options: {
-      maintainAspectRatio: false,
-      cutoutPercentage: 50,
+      /* maintainAspectRatio: false,
+      cutoutPercentage: 50, */
 
       animation: {
         tension: {
@@ -485,8 +485,8 @@ export function getImportExportChartTemplate(datas: ImportExportData): any {
       datasets: lineData,
     },
     options: {
-      maintainAspectRatio: false,
-      cutoutPercentage: 50,
+      /*  maintainAspectRatio: false,
+      cutoutPercentage: 50, */
 
       animation: {
         tension: {

@@ -28,7 +28,11 @@ const RetailChart = () => {
           <ChartBlock>
             <ChartTitle>소비자 가격 추이</ChartTitle>
             <DataChartBlock>
-              <Line data={chartData.data} options={chartData.options} />
+              <Line
+                height={250}
+                data={chartData.data}
+                options={chartData.options}
+              />
               <RangeLabelBlock>
                 <RangeLabel>{retailChartData.RangeLabel[0]}</RangeLabel>
                 <RangeLabel>
@@ -82,7 +86,7 @@ const ChartBlock = styled.div`
 
 const DataChartBlock = styled.div`
   height: auto;
-  min-height: 150px;
+  min-height: 200px;
   margin-bottom: 4rem;
 `;
 

@@ -29,6 +29,7 @@ const ImportExport = () => {
             <ChartTitle>수입 월간 추이</ChartTitle>
             <DataChartBlock>
               <Line
+                height={250}
                 data={importChartData.data}
                 options={importChartData.options}
               />
@@ -51,6 +52,7 @@ const ImportExport = () => {
             <ChartTitle>수출 월간 추이</ChartTitle>
             <DataChartBlock>
               <Line
+                height={250}
                 data={exportChartData.data}
                 options={exportChartData.options}
               />
@@ -84,7 +86,7 @@ const ChartBlock = styled.div`
 
 const DataChartBlock = styled.div`
   height: auto;
-  min-height: 150px;
+  min-height: 200px;
   margin-bottom: 4rem;
 `;
 

@@ -37,7 +37,11 @@ const WholeChart = () => {
           <ChartBlock>
             <ChartTitle>도매 가격 추이</ChartTitle>
             <DataChartBlock>
-              <Line data={chartData.data} options={chartData.options} />
+              <Line
+                height={250}
+                data={chartData.data}
+                options={chartData.options}
+              />
               <RangeLabelBlock>
                 <RangeLabel>
                   {wholeChartData.RangeLabel && wholeChartData.RangeLabel[0]}
@@ -58,7 +62,11 @@ const WholeChart = () => {
           <ChartBlock>
             <ChartTitle>도매 가격 추이</ChartTitle>
             <DataChartBlock>
-              <Bar data={stackedData.data} options={stackedData.options} />
+              <Bar
+                height={250}
+                data={stackedData.data}
+                options={stackedData.options}
+              />
               {/* <Line data={chartData.data} options={chartData.options} /> */}
             </DataChartBlock>
           </ChartBlock>
@@ -106,7 +114,7 @@ const ChartBlock = styled.div`
 
 const DataChartBlock = styled.div`
   height: auto;
-  min-height: 150px;
+  min-height: 200px;
   margin-bottom: 4rem;
 `;
 
