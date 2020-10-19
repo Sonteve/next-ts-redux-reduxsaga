@@ -7,7 +7,6 @@ import {
 import { Line, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { stackedData } from "../utils/dummy";
 
 const WholeChart = () => {
   const { wholeChartData, auctionVolumeData } = useSelector(
@@ -20,7 +19,7 @@ const WholeChart = () => {
     wholeChartData && wholeChartData.GraphLine
       ? setChartData(getChartTemplate(wholeChartData))
       : setChartData(null);
-    auctionVolumeData && auctionVolumeData.GraphLine
+    auctionVolumeData && auctionVolumeData.GraphBar
       ? setAuctionData(getAuctionVolumeChartTemplate(auctionVolumeData))
       : setAuctionData(null);
   }, [wholeChartData, auctionVolumeData]);
@@ -57,23 +56,23 @@ const WholeChart = () => {
           </ChartBlock>
         </>
       )}
-      {stackedData && (
+      {/* {stackedData && (
         <>
           <ChartBlock>
-            <ChartTitle>도매 가격 추이</ChartTitle>
+            <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
             <DataChartBlock>
               <Bar
                 height={250}
                 data={stackedData.data}
                 options={stackedData.options}
               />
-              {/* <Line data={chartData.data} options={chartData.options} /> */}
+              
             </DataChartBlock>
           </ChartBlock>
         </>
-      )}
+      )} */}
 
-      {/* {auctionData && auctionVolumeData && (
+      {auctionData && auctionVolumeData && (
         <>
           <ChartBlock>
             <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
@@ -94,7 +93,7 @@ const WholeChart = () => {
             </DataChartBlock>
           </ChartBlock>
         </>
-      )} */}
+      )}
     </>
   );
 };

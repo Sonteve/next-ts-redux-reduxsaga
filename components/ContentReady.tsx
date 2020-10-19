@@ -39,7 +39,9 @@ const ContentReady = () => {
     retailRecent,
     retailPrev,
     retailChart,
-  } = useSelector(({ wholePrice, retailPrice }: RootState) => ({
+    importChart,
+    exportChart,
+  } = useSelector(({ wholePrice, retailPrice,importExport}: RootState) => ({
     wholeRecent: wholePrice.recentPriceDataDone,
     wholePrev: wholePrice.lastYearPriceDataDone,
     wholeChart: wholePrice.wholeChartDataDone,
@@ -47,6 +49,8 @@ const ContentReady = () => {
     retailRecent: retailPrice.recentPriceDataDone,
     retailPrev: retailPrice.lastYearPriceDataDone,
     retailChart: retailPrice.retailChartDataDone,
+    importChart: importExport.importData,
+    exportChart: importExport.exportData,
   }));
 
   const onClickInquire = useCallback(() => {
@@ -75,7 +79,9 @@ const ContentReady = () => {
     auctionChart ||
     retailRecent ||
     retailPrev ||
-    retailChart
+    retailChart ||
+    importChart ||
+    exportChart
   ) {
     return null;
   }

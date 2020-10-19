@@ -65,7 +65,7 @@ function* getLastYearWholePriceSaga(
 }
 
 function getWholeChartDataAPI(data: string) {
-  return axios.get(`http://tapi.agripa.kr/v2/whole/price/graph/${data}`);
+  return axios.get(`http://tapi.agripa.kr/v2/whole/price/line-graph/${data}`);
 }
 
 function* getWholeChartDataSaga(
@@ -86,17 +86,23 @@ function* getWholeChartDataSaga(
 }
 
 function getAuctionVolumeDataAPI(data: string) {
-  return axios.get(`http://tapi.agripa.kr/v2/auction/adj/quantity/${data}`);
+  console.log(
+    `http://tapi.agripa.kr/v2/auction/adj/quantity/bar-graph/${data}`
+  );
+  return axios.get(
+    `http://tapi.agripa.kr/v2/auction/adj/quantity/bar-graph/${data}`
+  );
 }
 
 function* getAuctionVolumeDataSaga(
   action: ActionType<typeof getAuctionVolumeDataAction.request>
 ) {
+  console.log("옥션데이터");
   try {
     const result = yield call(getAuctionVolumeDataAPI, action.payload);
     yield put({
       type: AUCTION_VOLUME_DATA_SUCCESS,
-      payload: result.data.data.GraphLine ? result.data.data : null,
+      payload: result.data.data.RangeLabel ? result.data.data : null,
     });
   } catch (error) {
     yield put({

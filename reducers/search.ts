@@ -6,13 +6,14 @@ import {
 } from "typesafe-actions";
 import produce from "immer";
 import { AxiosError } from "axios";
-import { SearchItem, SearchCookie } from "../interfaces/search";
+import { SearchItem, SearchCookie, RecentNewsData } from "../interfaces/search";
 
 export const SET_PREV_SEARCH_COOKIE = "SET_PREV_SEARCH_COOKIE";
 
 export const SEARCH_FORM_INIT = "SEARCH_FORM_INIT";
 
 export const SET_CURRENT_ITEM = "SET_CURRENT_ITEM";
+export const SET_CURRENT_ITEM_IMAGE_SRC = "SET_CURRENT_ITEM_IMAGE_SRC";
 
 export const SEARCH_WORD_REQUEST = "SEARCH_WORD_REQUEST";
 export const SEARCH_WORD_SUCCESS = "SEARCH_WORD_SUCCESS";
@@ -24,29 +25,53 @@ export const searchWordAction = createAsyncAction(
   SEARCH_WORD_FAILURE
 )<string, SearchItem[], AxiosError>();
 
+export const RECENT_NEWS_LIST_REQUEST = "RECENT_NEWS_LIST_REQUEST";
+export const RECENT_NEWS_LIST_SUCCESS = "RECENT_NEWS_LIST_SUCCESS";
+export const RECENT_NEWS_LIST_FAILURE = "RECENT_NEWS_LIST_FAILURE";
+
+export const getRecentNewsListAction = createAsyncAction(
+  RECENT_NEWS_LIST_REQUEST,
+  RECENT_NEWS_LIST_SUCCESS,
+  RECENT_NEWS_LIST_FAILURE
+)<undefined, RecentNewsData[], AxiosError>();
+
 export const setPrevSearchCookie = createAction(SET_PREV_SEARCH_COOKIE)<any>();
 
 export const setCurrentItem = createAction(SET_CURRENT_ITEM)<SearchItem>();
 
 export const searchFormInitAction = createAction(SEARCH_FORM_INIT)();
 
+//test
+export const setCurrentItemImageSrc = createAction(SET_CURRENT_ITEM_IMAGE_SRC)<
+  string
+>();
+
 export interface SearchState {
   currentItem: SearchItem | null;
+  currentItemImageSrc: string | null;
   prevSearchList: SearchCookie[] | null;
   searchList: SearchItem[];
   searchLoading: boolean;
   searchDone: boolean;
   searchError: AxiosError | null;
+  recentNewsList: any;
+  recentNewsListDone: boolean;
+  recentNewsListLoading: boolean;
+  recentNewsListError: AxiosError | null;
 }
 
 export const initialState: SearchState = {
   currentItem: null,
-
+  currentItemImageSrc: null,
   prevSearchList: null,
   searchList: [],
   searchLoading: false,
   searchDone: false,
   searchError: null,
+  recentNewsList: null,
+  recentNewsListDone: false,
+  recentNewsListLoading: false,
+  recentNewsListError: null,
 };
 
 export type SearchAction = ActionType<
@@ -54,6 +79,8 @@ export type SearchAction = ActionType<
   | typeof searchFormInitAction
   | typeof setPrevSearchCookie
   | typeof setCurrentItem
+  | typeof setCurrentItemImageSrc
+  | typeof getRecentNewsListAction
   /* | typeof getItemCodeMapAction */
 >;
 
@@ -86,22 +113,26 @@ const search = createReducer<SearchState, SearchAction>(initialState, {
       draft.searchLoading = false;
       draft.searchError = action.payload;
     }),
-  /* [GET_ITEM_CODE_MAP_REQUEST]: (state) =>
+  [SET_CURRENT_ITEM_IMAGE_SRC]: (state, action) =>
     produce(state, (draft) => {
-      draft.itemCodeMapLoading = true;
-      draft.itemCodeMapError = null;
+      draft.currentItemImageSrc = action.payload;
     }),
-  [GET_ITEM_CODE_MAP_SUCCESS]: (state, action) =>
+  [RECENT_NEWS_LIST_REQUEST]: (state) =>
     produce(state, (draft) => {
-      draft.itemCodeMapLoading = false;
-      draft.itemCodeMapDone = false;
-      draft.itemCodeMap = action.payload;
+      draft.recentNewsListLoading = true;
+      draft.recentNewsListError = null;
     }),
-  [GET_ITEM_CODE_MAP_FAILURE]: (state, action) =>
+  [RECENT_NEWS_LIST_SUCCESS]: (state, action) =>
     produce(state, (draft) => {
-      draft.itemCodeMapLoading = false;
-      draft.itemCodeMapError = action.payload;
-    }), */
+      draft.recentNewsListLoading = false;
+      draft.recentNewsListDone = false;
+      draft.recentNewsList = action.payload;
+    }),
+  [RECENT_NEWS_LIST_FAILURE]: (state, action) =>
+    produce(state, (draft) => {
+      draft.recentNewsListLoading = false;
+      draft.recentNewsListError = action.payload;
+    }),
 });
 
 export default search;

@@ -41,7 +41,7 @@ export interface ChartData {
   }[];
 }
 
-export interface AuctionVolumeData {
+/* export interface AuctionVolumeData {
   StdItemCode: string;
   RangeLabel: string[];
   GraphLine: {
@@ -53,4 +53,14 @@ export interface AuctionVolumeData {
       Y: string;
     }[];
   }[];
+} */
+
+export interface AuctionVolumeData {
+  GraphBar: {
+    GraphData: string[];
+    StdItemName: "string";
+    StdSpeciesName: "string";
+  }[];
+  RangeLabel: string[];
+  StdItemCode: string;
 }

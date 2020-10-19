@@ -5,9 +5,9 @@ import SearchBar from "../components/SearchBar";
 import {
   setCurrentItem,
   searchFormInitAction,
-  /* getItemCodeMapAction, */
+  setCurrentItemImageSrc,
 } from "../reducers/search";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import WholePriceInfo from "../components/WholePriceInfo";
 import RetailPriceInfo from "../components/RetailPriceInfo";
 import Footer from "../components/Footer";
@@ -20,7 +20,7 @@ import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
 import { getNewsAction, getYoutubeAction } from "../reducers/media";
 import {
-  /* getAuctionVolumeDataAction, */
+  getAuctionVolumeDataAction,
   getLastYearWholePriceAction,
   getRecentWholePriceAction,
   getWholeChartDataAction,
@@ -36,10 +36,17 @@ import {
   getImportDataAction,
   getExportDataAction,
 } from "../reducers/importExport";
+import { RootState } from "../reducers";
+
+import axios from "axios";
+import cheerio from "cheerio";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
 function Detail() {
+  const { currentItemImageSrc } = useSelector(
+    ({ search }: RootState) => search
+  );
   const dispatch = useDispatch();
   const router = useRouter();
   const { keyword } = router.query;
@@ -64,7 +71,13 @@ function Detail() {
       {search && <SearchBar focus={search} />}
       {/* <ContentReady /> */}
       <ItemImageWrapper>
-        <TestImg>{keyword}이미지</TestImg>
+        {currentItemImageSrc ? (
+          <TestImg>
+            <img src={currentItemImageSrc} alt={`${keyword}이미지`} />
+          </TestImg>
+        ) : (
+          <TestImg>`${keyword}이미지`</TestImg>
+        )}
       </ItemImageWrapper>
       <ContentReady />
       <WholePriceInfo />
@@ -84,6 +97,25 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
     const ItemCode = context.query.itemcode as string;
     const Keyword = context.query.keyword as string;
+
+    const getHtml = async () => {
+      try {
+        return await axios.get(
+          `https://search.naver.com/search.naver?where=image&sm=tab_jum&query=${encodeURIComponent(
+            Keyword
+          )}`
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getHtml().then((html: any) => {
+      const $ = cheerio.load(html.data);
+      const $bodyList = $("div.img_area._item img._img");
+      const imgSrc = $bodyList[0].attribs["data-source"];
+      context.store.dispatch(setCurrentItemImageSrc(imgSrc));
+    });
     context.store.dispatch(
       setCurrentItem({
         ItemCode,
@@ -109,7 +141,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     context.store.dispatch(getRecentWholePriceAction.request(ItemCode));
     context.store.dispatch(getLastYearWholePriceAction.request(ItemCode));
     context.store.dispatch(getWholeChartDataAction.request(ItemCode));
-    /* context.store.dispatch(getAuctionVolumeDataAction.request(ItemCode)); */
+    context.store.dispatch(getAuctionVolumeDataAction.request(ItemCode));
     context.store.dispatch(getRecentRetailPriceAction.request(ItemCode));
     context.store.dispatch(getLastYearRetailPriceAction.request(ItemCode));
     context.store.dispatch(getRetailChartDataAction.request(ItemCode));
@@ -133,7 +165,8 @@ const ItemImageWrapper = styled.div`
 
 const TestImg = styled.div`
   width: 80%;
-  padding: 30px 0;
+  overflow: hidden;
+  /* padding: 30px 0; */
   text-align: center;
   display: inline-block;
   background: #dbdbdb;
@@ -141,4 +174,7 @@ const TestImg = styled.div`
   border-radius: 15px;
   color: #fff;
   font-size: 30px;
+  & img {
+    width: 100%;
+  }
 `;

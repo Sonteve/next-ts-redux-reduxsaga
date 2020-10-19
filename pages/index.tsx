@@ -2,13 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
-import { getNewsAction } from "../reducers/media";
+import { getRecentNewsListAction } from "../reducers/search";
 import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
+import RecentNews from "../components/RecentNews";
 
 // 메인페이지
 
 const Main = () => {
+  /* useEffect(() => {
+    console.log("qqqq", process.cpuUsage());
+  }); */
   /* useEffect(() => {
     const prevSearch = cookie.load("search-cookie");
     if (prevSearch) {
@@ -31,6 +35,7 @@ const Main = () => {
         <TestImg>Agripa</TestImg>
       </MainImageWrapper>
       <SearchBar />
+      <RecentNews />
       <Footer />
     </MainWrapper>
   );
@@ -40,13 +45,8 @@ export default Main;
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    context.store.dispatch(
-      getNewsAction.request({
-        itemCode: "0103",
-        start: 0,
-        countPerPage: 5,
-      })
-    );
+    context.store.dispatch(getRecentNewsListAction.request());
+    console.log("qqqq", process.cpuUsage());
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
     return { props: {} };

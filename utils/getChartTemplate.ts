@@ -2,6 +2,10 @@ import Chart from "chart.js";
 import { ChartData, AuctionVolumeData } from "../interfaces/price";
 import { ImportExportData } from "../interfaces/importExport";
 
+const numberWithCommas = function (x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 const dotColor = [
   "#567339",
   "#91A644",
@@ -289,150 +293,68 @@ export function getChartTemplate(datas: ChartData): any {
 }
 
 export function getAuctionVolumeChartTemplate(datas: AuctionVolumeData): any {
-  const lineData: any = [];
-  const { RangeLabel } = datas;
-  datas.GraphLine.map((line, index) => {
-    // 시장 이름에 시장,도매,소매가 들어갈경우 그부분 제거한 부분 을 label로 넣어준다.
-
-    const filteredData: any = [];
-    RangeLabel.map((range) => {
-      const existValue = line.GraphData.filter((data) => data.X === range)[0];
-      existValue
-        ? filteredData.push({ x: existValue.X, y: Number(existValue.Y) })
-        : filteredData.push({ x: range, y: 0 });
-    });
-
-    /* const filteredData: any = [];
-    RangeLabel.map((range) => {
-      const existValue = line.GraphData.filter((data) => data.X === range)[0];
-      existValue
-        ? filteredData.push({ x: existValue.X, y: Number(existValue.Y) })
-        : filteredData.push({ x: range, y: null });
-    }); */
-
-    /* let filteredMarketName = "";
-      if (
-        ["시장", "도매", "소매"].includes(
-          line.MarketName.substring(
-            line.MarketName.length - 2,
-            line.MarketName.length
-          )
-        )
-      ) {
-        filteredMarketName = line.MarketName.slice(0, line.MarketName.length - 2);
-      } else {
-        filteredMarketName = line.MarketName;
-      } */
-    lineData.push({
-      label: `${line.StdSpeciesName}(${line.StdGradeName})`, // 그 선에 해당하는 시장 이름.
-      data: filteredData, // 그 선에 들어가는 가격값 배열.
-      fill: false,
-      borderColor: dotColor[index],
-      lineTension: 0.4,
-      pointRadius: 0,
-      borderWidth: 2,
-      backgroundColor: dotColor[index],
-      cubicInterpolationMode: "monotone",
-    });
-  });
-
-  /* const minMaxStep = {
-      RangeMin: datas.RangeMin,
-      RangeMax: datas.RangeMax,
-      RangeStep: datas.RangeStep,
-    }; */
-
+  /* const datasets = datas.GraphBar.map((data) => ({
+    label: data.StdSpeciesName,
+    data: data.GraphData,
+    backgroundColor: "#512DA8",
+    hoverBackgroundColor: "#7E57C2",
+    hoverBorderWidth: 0,
+  }));
+ */
   return {
     data: {
-      labels: Range,
-      datasets: lineData,
+      labels: datas.RangeLabel,
+      datasets: datas.GraphBar.map((data, index) => ({
+        label: `${data.StdSpeciesName}`,
+        data: data.GraphData,
+        backgroundColor: dotColor[index],
+        hoverBackgroundColor: dotColor[dotColor.length - index],
+        hoverBorderWidth: 2,
+        hoverBorderColor: "lightgrey",
+      })),
     },
     options: {
-      /* maintainAspectRatio: false,
-      cutoutPercentage: 50, */
-
       animation: {
-        tension: {
-          duration: 1000,
-          easing: "linear",
-          from: 1,
-          to: 0,
-          loop: true,
-        },
+        duration: 10,
       },
-
       tooltips: {
-        position: "nearest",
-        mode: "index",
-        intersect: false,
-        titleSpacing: 100,
-        xPadding: 10,
-        yPadding: 10,
-        backgroundColor: "rgba(255,255,255,0.9)",
-        titleFontColor: "#666",
-        bodyFontFamily: "Noto Sans KR",
-        bodyFontColor: "#666",
-        shadowOffsetX: 3,
-        shadowOffsetY: 3,
-        shadowBlur: 10,
-        shadowColor: "rgba(0, 0, 0, 0.3)",
-        pointStyle: "circular",
-        bodySpacing: 5,
-
+        mode: "label",
         callbacks: {
-          label: function (tooltipitem: any, data: any) {
-            const ItemName = data.datasets[tooltipitem.datasetIndex].label;
-
-            let value: string | string[] = parseInt(
-              tooltipitem.value
-            ).toString();
-            value = value.split(/(?=(?:...)*$)/);
-            value = `${ItemName} : ${value}kg`;
-
-            return value;
+          label: function (tooltipItem: any, data: any) {
+            return (
+              data.datasets[tooltipItem.datasetIndex].label +
+              ": " +
+              numberWithCommas(tooltipItem.yLabel)
+            );
           },
-        },
-      },
-      hover: {
-        mode: "nearest",
-        intersect: true,
-      },
-      legend: {
-        labels: {
-          usePointStyle: true,
-          fontSize: 12,
-          fontFamily: "Noto Sans KR",
-          fontColor: "#999",
-          boxWidth: 8,
         },
       },
       scales: {
         xAxes: [
           {
-            type: "time",
-            display: false,
-            ticks: {
-              display: true,
-              maxTicksLimit: 1,
-            },
+            stacked: true,
+            gridLines: { display: false },
           },
         ],
         yAxes: [
           {
             display: false,
-            ticks: {
-              beginAtZero: false,
-              maxTicksLimit: 5,
-              display: false,
-            },
+            stacked: true,
+            /* ticks: {
+              callback: function (value: any) {
+                return numberWithCommas(value);
+              },
+            }, */
           },
         ],
-      },
-    },
+      }, // scales
+      legend: { display: true },
+    }, // options
   };
 }
 
 export function getImportExportChartTemplate(datas: ImportExportData): any {
+  console.log("datas", datas);
   const lineData: any = [];
   const { RangeLabel } = datas;
   datas.GraphLine.map((line, index) => {
@@ -478,11 +400,22 @@ export function getImportExportChartTemplate(datas: ImportExportData): any {
     RangeMax: datas.RangeMax,
     RangeStep: datas.RangeStep,
   }; */
+  console.log("lineData", lineData);
 
   return {
     data: {
-      labels: Range,
-      datasets: lineData,
+      datasets: [
+        {
+          // 금액
+          ...lineData[0],
+          type: lineData[0].label === "금액(달러)" ? "line" : "bar",
+        },
+        {
+          //중량
+          ...lineData[1],
+          type: lineData[1].label === "중량(kg)" ? "bar" : "line",
+        },
+      ],
     },
     options: {
       /*  maintainAspectRatio: false,

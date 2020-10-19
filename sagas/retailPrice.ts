@@ -61,7 +61,7 @@ function* getLastYearRetailPriceSaga(
 }
 
 function getRetailChartDataAPI(data: string) {
-  return axios.get(`http://tapi.agripa.kr/v2/retail/price/graph/${data}`);
+  return axios.get(`http://tapi.agripa.kr/v2/retail/price/line-graph/${data}`);
 }
 
 function* getRetailChartDataSaga(

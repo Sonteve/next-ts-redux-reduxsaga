@@ -14,3 +14,11 @@ export interface ItemCodeMap {
   ExaminItemCode: string;
   HskPrdlstCode: string;
 }
+
+export interface RecentNewsData {
+  title: string;
+  link: string;
+  description: string;
+  author: string;
+  pubDate: string;
+}
