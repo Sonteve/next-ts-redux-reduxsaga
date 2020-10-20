@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FcDocument } from "react-icons/fc";
 import styled from "styled-components";
 import Inquire from "./Inquire";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,21 +9,20 @@ import { initInquire } from "../reducers/inquire";
 } */
 
 const FooterBlock = styled.div`
-  padding: 40px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const FooterTitle = styled.div`
+/* const FooterTitle = styled.div`
   font-size: 16px;
   margin-bottom: 15px;
-`;
+`; */
 
 const FooterContents = styled.div``;
 
-const FooterContent = styled.div`
+/* const FooterContent = styled.div`
   border: 1px solid #dbdbdb;
   border-radius: 10px;
   padding: 15px;
@@ -32,10 +30,12 @@ const FooterContent = styled.div`
   font-size: 20px;
   text-align: center;
   margin-bottom: 15px;
-`;
+`; */
 
 const FooterAddress = styled.div`
   text-align: center;
+  background-color: #ececec;
+  padding: 10px;
 `;
 
 const InquireSuccess = styled.div`
@@ -102,10 +102,10 @@ const Footer = () => {
   return (
     <FooterBlock>
       {inquire && <Inquire onClickClose={onCloseInquire} />}
-      <FooterTitle>AGRIPA에 궁금하신 점이 있으신가요?</FooterTitle>
       <FooterContents>
-        <FooterContent onClick={onClickInquire}>
-          <FcDocument />
+        <InquireArea onClick={onClickInquire}>
+          <img src="footer_inquire.png" alt="문의하기" />
+          {/* <FcDocument />
           문의하기
         </FooterContent>
         <FooterContent>
@@ -120,8 +120,8 @@ const Footer = () => {
             target="_blank"
           >
             로고
-          </a>
-        </FooterContent>
+          </a> */}
+        </InquireArea>
         <FooterAddress>
           <div>
             주식회사 <strong>판다코퍼레이션</strong>
@@ -146,3 +146,10 @@ const Footer = () => {
 };
 
 export default Footer;
+
+const InquireArea = styled.div`
+  & img {
+    display: block;
+    width: 100%;
+  }
+`;

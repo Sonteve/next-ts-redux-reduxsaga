@@ -60,7 +60,7 @@ const MainWrapper = styled.div``;
 const MainImageWrapper = styled.div`
   box-sizing: border-box;
   width: 100%;
-  padding: 15px;
+  padding: 4rem 1.5rem 1.5rem 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;

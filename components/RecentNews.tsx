@@ -26,6 +26,7 @@ const RecentNews = () => {
           </NewsItemWrapper>
         ))}
       </LazyLoad>
+      <UnderLine />
     </NewsBlock>
   );
 };
@@ -33,6 +34,12 @@ const RecentNews = () => {
 export default RecentNews;
 
 /* const NewsTitle = styled.div``; */
+
+const UnderLine = styled.div`
+  background-color: #ececec;
+  height: 1rem;
+  width: 100%;
+`;
 
 const MainTitle = styled.div`
   font-weight: 700;

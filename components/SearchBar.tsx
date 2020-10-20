@@ -154,7 +154,7 @@ const SearchBar = ({ focus }: Props) => {
         <SearchResult>
           {!input && prevSearchList && searchFocus && (
             <PrevSearchList>
-              <div>이전 검색목록</div>
+              <PrevListTitle>이전 검색목록</PrevListTitle>
               {prevSearchList.map((prevItem) => (
                 <SearchingItem
                   key={prevItem.Keyword}
@@ -175,32 +175,89 @@ const SearchBar = ({ focus }: Props) => {
                 {searchItem.Keyword}
               </SearchingItem>
             ))}
+          {input && searchFocus && searchList && (
+            <SearchListUI>
+              <RemoveButton
+                style={{ fontSize: "1.3rem", color: "#777" }}
+                onClick={onClickCloseButton}
+              >
+                닫기
+              </RemoveButton>
+            </SearchListUI>
+          )}
+          {!input && searchFocus && prevSearchList && (
+            <SearchListUI>
+              <RemoveButton
+                style={{ fontSize: "1.3rem", color: "#777" }}
+                onClick={onClickCloseButton}
+              >
+                닫기
+              </RemoveButton>
+            </SearchListUI>
+          )}
+
+          {/* {searchFocus && searchList && (prevSearchList || searchList) && (
+            <SearchListUI>
+              <RemoveButton onClick={onClickCloseButton}>닫기</RemoveButton>
+            </SearchListUI>
+          )} */}
         </SearchResult>
       </InputWrapper>
-      <RemoveButton onClick={onClickCloseButton}>X</RemoveButton>
+      <SearchUI>
+        {input && <RemoveButton onClick={onClickCloseButton}>X</RemoveButton>}
+        <SearchButton src="search.png" />
+      </SearchUI>
     </SearchForm>
   );
 };
 
 export default SearchBar;
 
-const RemoveButton = styled.button`
-  width: 39px;
-  height: 39px;
-  border-radius: 50%;
+const SearchListUI = styled.div`
+  padding: 1rem 0.5rem;
+  background: #eaeaea;
+  text-align: right;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: 1px solid #d2d2d2;
+`;
+
+const PrevListTitle = styled.div`
+  padding: 1rem;
+  font-size: 1.3rem;
+  color: #777;
+`;
+
+const SearchUI = styled.div`
   position: absolute;
-  right: 1%;
+  right: 3%;
+  display: flex;
+`;
+
+const SearchButton = styled.img`
+  width: 3rem;
+  height: 3rem;
+`;
+
+const RemoveButton = styled.button`
+  font-size: 1.8rem;
+
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
 `;
 
 const SearchResult = styled.div`
   position: absolute;
   width: 100%;
-  font-size: 18px;
-  top: 40px;
+  font-size: 17px;
+  top: 51px;
 `;
 const SearchForm = styled.form<SCProps>`
-  padding: 10px;
   display: flex;
+  align-items: center;
   background: #4eac62;
   width: 100%;
   box-sizing: border-box;
@@ -220,10 +277,20 @@ const InputWrapper = styled.div`
 
   & > input {
     flex: 1;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    padding: 15px 10px;
+    font-size: 17px;
+    border: none;
+    background-color: #4eac62;
+    color: #fff;
+    border-radius: 0;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    &:focus {
+      outline: none !important;
+    }
   }
 `;
 
@@ -232,10 +299,15 @@ const PrevSearchList = styled.div`
 `;
 
 const SearchingItem = styled.div`
-  background: black;
-  color: yellow;
+  background-color: #fff;
+  color: #555;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  font-family: "Noto Sans KR", sans-serif;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #d2d2d2;
+  }
 `;
