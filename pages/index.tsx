@@ -31,10 +31,12 @@ const Main = () => {
   데이터 있을시 가져온 현재 데이터로 갱신 */
   return (
     <MainWrapper>
-      <MainImageWrapper>
-        <TestImg>Agripa</TestImg>
-      </MainImageWrapper>
-      <SearchBar />
+      <MainUi>
+        <MainImageWrapper>
+          <TestImg src="logo.png" />
+        </MainImageWrapper>
+        <SearchBar />
+      </MainUi>
       <RecentNews />
       <Footer />
     </MainWrapper>
@@ -56,12 +58,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
 const MainWrapper = styled.div``;
 
 const MainImageWrapper = styled.div`
+  box-sizing: border-box;
+  width: 100%;
   padding: 15px;
-  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-const TestImg = styled.div`
-  height: 150px;
+const TestImg = styled.img`
+  width: 40%;
+  /*  height: 150px;
   background: #dbdbdb;
   border: 1px solid black;
   border-radius: 15px;
@@ -69,5 +76,9 @@ const TestImg = styled.div`
   color: #fff;
   font-size: 30px;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
+`;
+
+const MainUi = styled.div`
+  background-color: #4eac62;
 `;

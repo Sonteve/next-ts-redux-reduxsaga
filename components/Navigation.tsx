@@ -1,5 +1,4 @@
 import React from "react";
-import { FcSearch, FcPrevious } from "react-icons/fc";
 import styled from "styled-components";
 import Router, { useRouter } from "next/router";
 
@@ -12,29 +11,49 @@ const Navigation = ({ onClickSearchButton }: Props) => {
   const { keyword } = router.query;
   return (
     <NavigationBlock>
-      <FcPrevious
-        onClick={() => Router.replace("/")}
-        style={{ cursor: "pointer", fontSize: "30px" }}
-      />
-      <div>{keyword}</div>
-      <div>
-        <FcSearch
-          style={{ fontSize: "30px", cursor: "pointer" }}
-          onClick={onClickSearchButton}
-        />
-      </div>
+      <PrevBtn onClick={() => Router.replace("/")}>
+        <img src="back.png" alt="뒤로가기" />
+      </PrevBtn>
+      <NavTitle>{keyword}</NavTitle>
+      <SearchBtn onClick={onClickSearchButton}>
+        <img src="search.png" alt="검색 버튼" />
+      </SearchBtn>
     </NavigationBlock>
   );
 };
 
 export default Navigation;
 
+const NavTitle = styled.div`
+  color: #fff;
+`;
+
+const PrevBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & img {
+    width: 50%;
+    display: block;
+  }
+`;
+
+const SearchBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & img {
+    width: 50%;
+    display: block;
+  }
+`;
+
 const NavigationBlock = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
   height: 44px;
-  background: #fff;
+  background: #4eac62;
   display: flex;
   justify-content: space-between;
   align-items: center;

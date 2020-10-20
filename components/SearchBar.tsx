@@ -57,6 +57,7 @@ const SearchBar = ({ focus }: Props) => {
     setInput("");
     const prevSearchCookie: SearchCookie[] = cookie.load("search-cookie");
     console.log("클릭한 아이템", item);
+
     // 검색 당시 정보 저장
     const newData = {
       Keyword: item.Keyword,
@@ -199,10 +200,8 @@ const SearchResult = styled.div`
 `;
 const SearchForm = styled.form<SCProps>`
   padding: 10px;
-  background: #dbdbdb;
-  border: 1px solid #eaeaea;
   display: flex;
-
+  background: #4eac62;
   width: 100%;
   box-sizing: border-box;
   position: relative;
