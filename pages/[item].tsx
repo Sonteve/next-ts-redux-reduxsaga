@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
-import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
-import {
-  setCurrentItem,
-  searchFormInitAction,
-  setCurrentItemImageSrc,
-} from "../reducers/search";
-import { useDispatch, useSelector } from "react-redux";
+import { setCurrentItem, searchFormInitAction } from "../reducers/search";
+import { useDispatch } from "react-redux";
 import WholePriceInfo from "../components/WholePriceInfo";
 import RetailPriceInfo from "../components/RetailPriceInfo";
 import Footer from "../components/Footer";
@@ -36,17 +31,10 @@ import {
   getImportDataAction,
   getExportDataAction,
 } from "../reducers/importExport";
-import { RootState } from "../reducers";
-
-import axios from "axios";
-import cheerio from "cheerio";
 
 // 품목 상세페이지 동적라우팅 컴포넌트
 
 function Detail() {
-  const { currentItemImageSrc } = useSelector(
-    ({ search }: RootState) => search
-  );
   const dispatch = useDispatch();
   const router = useRouter();
   const { keyword } = router.query;
@@ -67,10 +55,10 @@ function Detail() {
       <Head>
         <title>Agripa | {keyword}</title>
       </Head>
+      {/* <Inquire /> */}
       <Navigation onClickSearchButton={onClickSearchButton} />
       {search && <SearchBar focus={search} />}
-      {/* <ContentReady /> */}
-      <ItemImageWrapper>
+      {/* <ItemImageWrapper>
         {currentItemImageSrc ? (
           <TestImg>
             <img src={currentItemImageSrc} alt={`${keyword}이미지`} />
@@ -78,7 +66,7 @@ function Detail() {
         ) : (
           <TestImg>`${keyword}이미지`</TestImg>
         )}
-      </ItemImageWrapper>
+      </ItemImageWrapper> */}
       <ContentReady />
       <WholePriceInfo />
       <WholeChart />
@@ -98,7 +86,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const ItemCode = context.query.itemcode as string;
     const Keyword = context.query.keyword as string;
 
-    const getHtml = async () => {
+    /* const getHtml = async () => {
       try {
         return await axios.get(
           `https://search.naver.com/search.naver?where=image&sm=tab_jum&query=${encodeURIComponent(
@@ -115,7 +103,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const $bodyList = $("div.img_area._item img._img");
       const imgSrc = $bodyList[0].attribs["data-source"];
       context.store.dispatch(setCurrentItemImageSrc(imgSrc));
-    });
+    }); */
     context.store.dispatch(
       setCurrentItem({
         ItemCode,
@@ -154,7 +142,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   }
 );
 
-const ItemImageWrapper = styled.div`
+/* const ItemImageWrapper = styled.div`
   margin-top: 44px;
   padding: 15px;
   background: #eee;
@@ -166,7 +154,6 @@ const ItemImageWrapper = styled.div`
 const TestImg = styled.div`
   width: 80%;
   overflow: hidden;
-  /* padding: 30px 0; */
   text-align: center;
   display: inline-block;
   background: #dbdbdb;
@@ -177,4 +164,4 @@ const TestImg = styled.div`
   & img {
     width: 100%;
   }
-`;
+`; */

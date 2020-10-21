@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback /* , useEffect, useState  */ } from "react";
 import styled from "styled-components";
-import Inquire from "./Inquire";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
-import { initInquire } from "../reducers/inquire";
+/* import Inquire from "./Inquire"; */
+/* import { RootState } from "../reducers";
+import { initInquire } from "../reducers/inquire"; */
+import Router from "next/router";
 
 /* interface Props {    
 } */
@@ -38,7 +38,7 @@ const FooterAddress = styled.div`
   padding: 10px;
 `;
 
-const InquireSuccess = styled.div`
+/* const InquireSuccess = styled.div`
   display: flex;
   background: white;
   flex-direction: column;
@@ -52,43 +52,23 @@ const InquireSuccess = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`;
+`; */
 
-const SuccessBlock = styled.div`
+/* const SuccessBlock = styled.div`
   position: absolute;
   top: 0;
   background: rgba(0, 0, 0, 0.2);
   width: 100vw;
   height: 100vh;
-`;
+`; */
 
 const Footer = () => {
-  const dispatch = useDispatch();
-
-  const { inquireContent, sendInquireLoading } = useSelector(
-    ({ inquire }: RootState) => inquire
-  );
-  const [inquire, setInquire] = useState(false);
   const onClickInquire = useCallback(() => {
     console.log("문의하기");
-    setInquire(true);
+    Router.push("/inquire");
   }, []);
 
-  const onCloseInquire = useCallback(() => {
-    console.log("문의하기 닫기");
-    dispatch(initInquire());
-    setInquire(false);
-  }, []);
-
-  useEffect(() => {
-    if (inquire) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "visible ";
-    }
-  });
-
-  if (!sendInquireLoading && inquireContent) {
+  /* if (!sendInquireLoading && inquireContent) {
     return (
       <SuccessBlock>
         <InquireSuccess>
@@ -97,11 +77,11 @@ const Footer = () => {
         </InquireSuccess>
       </SuccessBlock>
     );
-  }
+  } */
 
   return (
     <FooterBlock>
-      {inquire && <Inquire onClickClose={onCloseInquire} />}
+      {/*  {inquire && <Inquire onClickClose={onCloseInquire} />} */}
       <FooterContents>
         <InquireArea onClick={onClickInquire}>
           <img src="footer_inquire.png" alt="문의하기" />

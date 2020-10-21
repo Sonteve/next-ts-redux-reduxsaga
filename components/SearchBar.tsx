@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  KeyboardEvent,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
@@ -40,16 +41,34 @@ const SearchBar = ({ focus }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    console.log("eee");
     setInput(e.target.value);
   }, []);
 
   // submit시 입력값 확인
   const onSubmitSearchForm = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement> | FormEvent<HTMLInputElement>) => {
       e.preventDefault();
+      console.log(searchList.length);
+      if (!searchList.length) return;
       console.log("submit 값 : ", input);
+      console.log("searchList.length", searchList[0]);
+      const { Keyword, ItemCode } = searchList[0];
+      Router.push(`/product?keyword=${Keyword}&itemcode=${ItemCode}`);
     },
-    [input]
+    [input, searchList]
+  );
+
+  const onKeyPressCheck = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      /* console.log("e.key", e.key);
+      if (!searchList.length) return;
+      console.log("submit 값 : ", input); */
+      if (e.key !== "Enter" || searchList.length === 0) return;
+      const { Keyword, ItemCode } = searchList[0];
+      Router.push(`/product?keyword=${Keyword}&itemcode=${ItemCode}`);
+    },
+    [input, searchList]
   );
 
   // 검색결과 아이템 클릭시 쿠키에 추가 및 라우팅
@@ -147,8 +166,9 @@ const SearchBar = ({ focus }: Props) => {
       <InputWrapper>
         <input
           ref={inputRef}
-          placeholder="품목을 입력하세요."
           value={input}
+          placeholder="품목을 입력하세요."
+          onKeyPress={onKeyPressCheck}
           onChange={onChangeInput}
         />
         <SearchResult>
@@ -205,7 +225,9 @@ const SearchBar = ({ focus }: Props) => {
       </InputWrapper>
       <SearchUI>
         {input && <RemoveButton onClick={onClickCloseButton}>X</RemoveButton>}
-        <SearchButton src="search.png" />
+        <SearchButton type="submit">
+          <img src="search.png" />
+        </SearchButton>
       </SearchUI>
     </SearchForm>
   );
@@ -236,9 +258,13 @@ const SearchUI = styled.div`
   display: flex;
 `;
 
-const SearchButton = styled.img`
-  width: 3rem;
-  height: 3rem;
+const SearchButton = styled.button`
+  & img {
+    width: 3rem;
+    height: 3rem;
+  }
+  border: none;
+  background: none;
 `;
 
 const RemoveButton = styled.button`

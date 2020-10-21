@@ -12,6 +12,8 @@ export const SEND_INQUIRE_REQUEST = "SEND_INQUIRE_REQUEST";
 export const SEND_INQUIRE_SUCCESS = "SEND_INQUIRE_SUCCESS";
 export const SEND_INQUIRE_FAILURE = "SEND_INQUIRE_FAILURE";
 
+export const SET_INQUIRE_STATE = "SET_INQUIRE_STATE";
+
 export const INIT_INQUIRE = "INIT_INQUIRE";
 
 export const initInquire = createAction(INIT_INQUIRE)();
@@ -21,13 +23,18 @@ export const sendInquireAction = createAsyncAction(
   SEND_INQUIRE_FAILURE
 )<Inquire, InquireSuccess, AxiosError>();
 
-type InquireAction = ActionType<typeof sendInquireAction | typeof initInquire>;
+export const setInquireState = createAction(SET_INQUIRE_STATE)<boolean>();
+
+type InquireAction = ActionType<
+  typeof sendInquireAction | typeof initInquire | typeof setInquireState
+>;
 
 export interface InquireState {
   inquireContent: InquireSuccess | null;
   sendInquireLoading: boolean;
   sendInquireDone: boolean;
   sendInquireError: AxiosError | null;
+  inquireState: boolean;
 }
 
 const initialState: InquireState = {
@@ -35,9 +42,14 @@ const initialState: InquireState = {
   sendInquireLoading: false,
   sendInquireDone: false,
   sendInquireError: null,
+  inquireState: false,
 };
 
 const inquire = createReducer<InquireState, InquireAction>(initialState, {
+  [SET_INQUIRE_STATE]: (state, action) =>
+    produce(state, (draft) => {
+      draft.inquireState = action.payload;
+    }),
   [INIT_INQUIRE]: (state) =>
     produce(state, (draft) => {
       draft.inquireContent = null;

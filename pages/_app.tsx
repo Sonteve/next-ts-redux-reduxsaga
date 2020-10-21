@@ -12,6 +12,10 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
     <>
       <Head>
         <title>Agripa</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=no"
+        ></meta>
         <style>
           @import
           url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
