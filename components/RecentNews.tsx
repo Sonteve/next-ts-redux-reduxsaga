@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { RootState } from "../reducers";
 import { RecentNewsData } from "../interfaces/search";
+import UnderLine from "./UnderLine";
 
 const RecentNews = () => {
   const { recentNewsList } = useSelector(({ search }: RootState) => search);
@@ -35,11 +36,11 @@ export default RecentNews;
 
 /* const NewsTitle = styled.div``; */
 
-const UnderLine = styled.div`
+/* const UnderLine = styled.div`
   background-color: #ececec;
   height: 1rem;
   width: 100%;
-`;
+`; */
 
 const MainTitle = styled.div`
   font-weight: 700;

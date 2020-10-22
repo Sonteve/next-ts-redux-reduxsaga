@@ -4,29 +4,44 @@ import News from "./News";
 import Youtube from "./Youtube";
 import { RootState } from "../reducers";
 import { useSelector } from "react-redux";
+import InnerCircle from "./InnerCircle";
 
 const MediaTrendBlock = styled.div`
-  padding: 0 15px;
-  background: #eee;
+  padding-top: 2rem;
 `;
 const MediaTabList = styled.ul`
   display: flex;
-  margin-bottom: 15px;
+  padding: 1rem;
+  box-sizing: border-box;
 `;
 const MediaTabItem = styled.li<SCprops>`
-  padding: 5px 15px;
-  border: 1px solid #666;
-  border-radius: 10px;
-  background: #dbdbdb;
-  color: white;
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  background: #eaeaea;
+  border-radius: 0.6rem;
+  color: #333;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  &:first-child {
+    margin-right: 1rem;
+  }
+  flex: 1;
 
   ${(props) =>
     props.active &&
     css`
-      background: black;
+      color: #fff;
+      font-weight: 700;
+      background-color: #4eac62;
     `}
 `;
-const MediaTrendTitle = styled.h3``;
+const MediaTrendTitle = styled.div`
+  font-size: 1.4rem;
+  color: #555;
+  align-items: center;
+  padding: 1rem;
+`;
 
 interface SCprops {
   active?: boolean;
@@ -53,7 +68,10 @@ const MediaTrend = () => {
   }
   return (
     <MediaTrendBlock>
-      <MediaTrendTitle>트랜드</MediaTrendTitle>
+      <MediaTrendTitle>
+        <InnerCircle />
+        트랜드
+      </MediaTrendTitle>
       <MediaTabList>
         <MediaTabItem
           active={currentTab === "news" ? true : false}

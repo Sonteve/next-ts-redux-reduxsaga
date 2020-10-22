@@ -19,6 +19,10 @@ export const SEARCH_WORD_REQUEST = "SEARCH_WORD_REQUEST";
 export const SEARCH_WORD_SUCCESS = "SEARCH_WORD_SUCCESS";
 export const SEARCH_WORD_FAILURE = "SEARCH_WORD_FAILURE";
 
+export const SET_WHOLE_OFFSET = "SET_WHOLE_OFFSET";
+export const SET_RETAIL_OFFSET = "SET_RETAIL_OFFSET";
+export const SET_PORT_OFFSET = "SET_PORT_OFFSET";
+
 export const searchWordAction = createAsyncAction(
   SEARCH_WORD_REQUEST,
   SEARCH_WORD_SUCCESS,
@@ -41,6 +45,10 @@ export const setCurrentItem = createAction(SET_CURRENT_ITEM)<SearchItem>();
 
 export const searchFormInitAction = createAction(SEARCH_FORM_INIT)();
 
+export const setWholeOffset = createAction(SET_WHOLE_OFFSET)<number>();
+export const setRetailOffset = createAction(SET_RETAIL_OFFSET)<number>();
+export const setPortOffset = createAction(SET_PORT_OFFSET)<number>();
+
 //test
 export const setCurrentItemImageSrc = createAction(SET_CURRENT_ITEM_IMAGE_SRC)<
   string
@@ -58,6 +66,9 @@ export interface SearchState {
   recentNewsListDone: boolean;
   recentNewsListLoading: boolean;
   recentNewsListError: AxiosError | null;
+  wholeOffset: number | null;
+  retailOffset: number | null;
+  importExportOffset: number | null;
 }
 
 export const initialState: SearchState = {
@@ -72,6 +83,9 @@ export const initialState: SearchState = {
   recentNewsListDone: false,
   recentNewsListLoading: false,
   recentNewsListError: null,
+  wholeOffset: null,
+  retailOffset: null,
+  importExportOffset: null,
 };
 
 export type SearchAction = ActionType<
@@ -81,6 +95,9 @@ export type SearchAction = ActionType<
   | typeof setCurrentItem
   | typeof setCurrentItemImageSrc
   | typeof getRecentNewsListAction
+  | typeof setWholeOffset
+  | typeof setRetailOffset
+  | typeof setPortOffset
   /* | typeof getItemCodeMapAction */
 >;
 
@@ -132,6 +149,18 @@ const search = createReducer<SearchState, SearchAction>(initialState, {
     produce(state, (draft) => {
       draft.recentNewsListLoading = false;
       draft.recentNewsListError = action.payload;
+    }),
+  [SET_WHOLE_OFFSET]: (state, action) =>
+    produce(state, (draft) => {
+      draft.wholeOffset = action.payload;
+    }),
+  [SET_RETAIL_OFFSET]: (state, action) =>
+    produce(state, (draft) => {
+      draft.retailOffset = action.payload;
+    }),
+  [SET_PORT_OFFSET]: (state, action) =>
+    produce(state, (draft) => {
+      draft.importExportOffset = action.payload;
     }),
 });
 

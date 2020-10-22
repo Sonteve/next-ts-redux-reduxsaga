@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { IoIosArrowDown } from "react-icons/io";
 
 const MoreMediaButtonBlock = styled.div`
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,11 +13,13 @@ const MoreMediaButtonBlock = styled.div`
 
 const MoreButton = styled.div`
   /* padding: 5px 20px; */
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 1px solid #ececec;
+  border-radius: 2rem;
   font-size: 18px;
-  padding: 5px 20px;
-  background: #eee;
+  padding: 0.7rem 7rem;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
 `;
 
 interface Props {
@@ -32,7 +36,9 @@ const MoreMediaButton = ({ getMoreNewsData, getMoreYoutubeData }: Props) => {
         <MoreButton onClick={getMoreYoutubeData}>더보기</MoreButton>
       )}
       {!getMoreNewsData && !getMoreYoutubeData && (
-        <MoreButton>더보기</MoreButton>
+        <MoreButton>
+          더보기 <IoIosArrowDown />
+        </MoreButton>
       )}
     </MoreMediaButtonBlock>
   );

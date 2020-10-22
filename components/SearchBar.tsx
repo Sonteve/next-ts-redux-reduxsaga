@@ -20,17 +20,20 @@ import cookie from "react-cookies";
 import { getOneYearLater } from "../utils/getOneYearLater";
 import moment from "moment";
 import { SearchCookie, SearchItem } from "../interfaces/search";
+import animateScrollTo from "animated-scroll-to";
 moment.locale("ko");
 
 interface Props {
   focus?: boolean;
+  isItemPage?: boolean;
 }
 
 interface SCProps {
   detail?: boolean;
+  same?: boolean;
 }
 
-const SearchBar = ({ focus }: Props) => {
+const SearchBar = ({ focus, isItemPage }: Props) => {
   const dispatch = useDispatch();
 
   const { searchList, prevSearchList } = useSelector(
@@ -108,6 +111,7 @@ const SearchBar = ({ focus }: Props) => {
       console.log("새 쿠키생성");
     }
     dispatch(setCurrentItem(item));
+    animateScrollTo(0, { speed: 0, minDuration: 0, maxDuration: 0 });
     Router.push(`/product?keyword=${item.Keyword}&itemcode=${item.ItemCode}`);
   }, []);
 
@@ -115,6 +119,12 @@ const SearchBar = ({ focus }: Props) => {
     console.log("닫힘");
     setSearchFocus(false);
     setInput("");
+  }, []);
+
+  const onClickCookieRemoveButton = useCallback(() => {
+    cookie.remove("search-cookie");
+    dispatch(setPrevSearchCookie(null));
+    inputRef.current?.focus();
   }, []);
 
   // 현재 페이지내부에 어디를 클릭했는지를 확인하는 이벤트핸들러
@@ -191,43 +201,45 @@ const SearchBar = ({ focus }: Props) => {
               <SearchingItem
                 key={index}
                 onClick={() => onClickItem(searchItem)}
+                same={input === searchItem.Keyword ? true : false}
               >
                 {searchItem.Keyword}
               </SearchingItem>
             ))}
-          {input && searchFocus && searchList && (
-            <SearchListUI>
-              <RemoveButton
-                style={{ fontSize: "1.3rem", color: "#777" }}
-                onClick={onClickCloseButton}
-              >
+          {input && searchFocus && searchList.length > 0 && (
+            <SearchListUI style={{ justifyContent: "flex-end" }}>
+              <ListCloseButton onClick={onClickCloseButton}>
                 닫기
-              </RemoveButton>
+              </ListCloseButton>
             </SearchListUI>
           )}
           {!input && searchFocus && prevSearchList && (
             <SearchListUI>
-              <RemoveButton
-                style={{ fontSize: "1.3rem", color: "#777" }}
-                onClick={onClickCloseButton}
-              >
+              <ListRemoveButton onClick={onClickCookieRemoveButton}>
+                이전 검색목록 제거
+              </ListRemoveButton>
+              <ListCloseButton onClick={onClickCloseButton}>
                 닫기
-              </RemoveButton>
+              </ListCloseButton>
             </SearchListUI>
           )}
 
           {/* {searchFocus && searchList && (prevSearchList || searchList) && (
             <SearchListUI>
-              <RemoveButton onClick={onClickCloseButton}>닫기</RemoveButton>
+              <ListCloseButton onClick={onClickCloseButton}>닫기</ListCloseButton>
             </SearchListUI>
           )} */}
         </SearchResult>
       </InputWrapper>
       <SearchUI>
-        {input && <RemoveButton onClick={onClickCloseButton}>X</RemoveButton>}
-        <SearchButton type="submit">
-          <img src="search.png" />
-        </SearchButton>
+        {input && (
+          <ListCloseButton onClick={onClickCloseButton}>X</ListCloseButton>
+        )}
+        {!isItemPage && (
+          <SearchButton type="submit">
+            <img src="search.png" />
+          </SearchButton>
+        )}
       </SearchUI>
     </SearchForm>
   );
@@ -242,7 +254,7 @@ const SearchListUI = styled.div`
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   border-bottom: 1px solid #d2d2d2;
 `;
 
@@ -259,6 +271,7 @@ const SearchUI = styled.div`
 `;
 
 const SearchButton = styled.button`
+  cursor: pointer;
   & img {
     width: 3rem;
     height: 3rem;
@@ -266,13 +279,21 @@ const SearchButton = styled.button`
   border: none;
   background: none;
 `;
-
-const RemoveButton = styled.button`
-  font-size: 1.8rem;
-
+const ListCloseButton = styled.button`
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #777;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
+  /* color: rgba(255, 255, 255, 0.8); */
+`;
+const ListRemoveButton = styled.button`
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #777;
+  background: transparent;
+  border: none;
+  /* color: rgba(255, 255, 255, 0.8); */
 `;
 
 const SearchResult = styled.div`
@@ -288,6 +309,7 @@ const SearchForm = styled.form<SCProps>`
   width: 100%;
   box-sizing: border-box;
   position: relative;
+  z-index: 150;
   ${(props) =>
     props.detail &&
     css`
@@ -324,7 +346,7 @@ const PrevSearchList = styled.div`
   background: white;
 `;
 
-const SearchingItem = styled.div`
+const SearchingItem = styled.div<SCProps>`
   background-color: #fff;
   color: #555;
   padding: 10px;
@@ -336,4 +358,11 @@ const SearchingItem = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid #d2d2d2;
   }
+
+  ${(props) =>
+    props.same &&
+    css`
+      /* background-color: #eee; */
+      font-weight: bold;
+    `}
 `;

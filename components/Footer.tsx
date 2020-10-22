@@ -9,6 +9,7 @@ import Router from "next/router";
 } */
 
 const FooterBlock = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +21,9 @@ const FooterBlock = styled.div`
   margin-bottom: 15px;
 `; */
 
-const FooterContents = styled.div``;
+const FooterContents = styled.div`
+  width: 100%;
+`;
 
 /* const FooterContent = styled.div`
   border: 1px solid #dbdbdb;
@@ -35,7 +38,7 @@ const FooterContents = styled.div``;
 const FooterAddress = styled.div`
   text-align: center;
   background-color: #ececec;
-  padding: 10px;
+  padding: 1rem 0;
 `;
 
 /* const InquireSuccess = styled.div`
@@ -128,6 +131,9 @@ const Footer = () => {
 export default Footer;
 
 const InquireArea = styled.div`
+  /* width: 100%; */
+  text-align: center;
+  cursor: pointer;
   & img {
     display: block;
     width: 100%;

@@ -332,6 +332,7 @@ export function getAuctionVolumeChartTemplate(datas: AuctionVolumeData): any {
       scales: {
         xAxes: [
           {
+            display: false,
             stacked: true,
             gridLines: { display: false },
           },

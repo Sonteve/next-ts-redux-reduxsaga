@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/router";
 import SearchBar from "../components/SearchBar";
 import { setCurrentItem, searchFormInitAction } from "../reducers/search";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import WholePriceInfo from "../components/WholePriceInfo";
 import RetailPriceInfo from "../components/RetailPriceInfo";
 import Footer from "../components/Footer";
@@ -14,7 +14,7 @@ import MediaTrend from "../components/MediaTrend";
 import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
 import { getNewsAction, getYoutubeAction } from "../reducers/media";
-import {
+import wholePrice, {
   getAuctionVolumeDataAction,
   getLastYearWholePriceAction,
   getRecentWholePriceAction,
@@ -31,49 +31,152 @@ import {
   getImportDataAction,
   getExportDataAction,
 } from "../reducers/importExport";
-
+import MarginBox from "../components/MarginBox";
+import { RootState } from "../reducers";
+import UnderLine from "../components/UnderLine";
 // 품목 상세페이지 동적라우팅 컴포넌트
 
 function Detail() {
+  const {
+    wholeRecent,
+    wholePrev,
+    wholeChart,
+    auctionChart,
+    retailRecent,
+    retailPrev,
+    retailChart,
+    importChart,
+    exportChart,
+  } = useSelector(({ wholePrice, retailPrice, importExport }: RootState) => ({
+    wholeRecent: wholePrice.recentPriceDataDone,
+    wholePrev: wholePrice.lastYearPriceDataDone,
+    wholeChart: wholePrice.wholeChartDataDone,
+    auctionChart: wholePrice.auctionVolumeDataDone,
+    retailRecent: retailPrice.recentPriceDataDone,
+    retailPrev: retailPrice.lastYearPriceDataDone,
+    retailChart: retailPrice.retailChartDataDone,
+    importChart: importExport.importData,
+    exportChart: importExport.exportData,
+  }));
   const dispatch = useDispatch();
   const router = useRouter();
   const { keyword } = router.query;
+  console.log("item페이지 실행", keyword);
   const [search, setSearch] = useState<boolean>(false);
+  const portRef = useRef<HTMLDivElement>(null);
+  const [portOffset, setPortOffset] = useState<number | null>(0);
+  const retailRef = useRef<HTMLDivElement>(null);
+  const [retailOffset, setRetailOffset] = useState<number | null>(0);
+  const wholeRef = useRef<HTMLDivElement>(null);
+  const [wholeOffset, setWholeOffset] = useState<number | null>(0);
 
-  const onClickSearchButton = useCallback(() => {
-    setSearch((prev) => !prev);
+  const onClickSearchFormOpenButton = useCallback(() => {
+    setSearch(true);
   }, [search]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setSearch(false);
     dispatch(searchFormInitAction());
     console.log("Item : name ", keyword);
   }, [keyword]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (portRef.current) {
+        setPortOffset(portRef.current.offsetTop);
+      } else {
+        setPortOffset(null);
+      }
+
+      if (retailRef.current) {
+        setRetailOffset(retailRef.current.offsetTop);
+      } else {
+        setRetailOffset(null);
+      }
+
+      if (wholeRef.current) {
+        setWholeOffset(wholeRef.current.offsetTop);
+      } else {
+        setWholeOffset(null);
+      }
+    }, 100);
+    /* setPortOffset(portRef.current.offsetTop); */
+  }, [keyword, portRef.current, retailRef.current, wholeRef.current]);
+
+  useEffect(() => {
+    console.log(
+      "wholeOffset",
+      wholeOffset,
+      "retailOffset",
+      retailOffset,
+      "portOffset",
+      portOffset,
+      "keyword",
+      keyword
+    );
+  }, [portOffset, retailOffset, wholeOffset, keyword]);
 
   return (
     <>
       <Head>
         <title>Agripa | {keyword}</title>
       </Head>
-      {/* <Inquire /> */}
-      <Navigation onClickSearchButton={onClickSearchButton} />
-      {search && <SearchBar focus={search} />}
-      {/* <ItemImageWrapper>
-        {currentItemImageSrc ? (
-          <TestImg>
-            <img src={currentItemImageSrc} alt={`${keyword}이미지`} />
-          </TestImg>
-        ) : (
-          <TestImg>`${keyword}이미지`</TestImg>
-        )}
-      </ItemImageWrapper> */}
+      <MarginBox
+        marginTop={
+          !wholeRecent &&
+          !wholePrev &&
+          !wholeChart &&
+          !auctionChart &&
+          !retailRecent &&
+          !retailPrev &&
+          !retailChart &&
+          !importChart &&
+          !exportChart
+            ? 5.5
+            : 10
+        }
+      />
+      <Navigation
+        onClickSearchFormOpenButton={onClickSearchFormOpenButton}
+        wholeOffset={wholeOffset}
+        retailOffset={retailOffset}
+        portOffset={portOffset}
+        isSearch={search}
+      />
+      {search && <SearchBar focus={search} isItemPage />}
+      {(wholeRecent || wholePrev || wholeChart || auctionChart) && (
+        <>
+          <div ref={wholeRef}>
+            {/* {wholeRef.current && wholeRef.current.offsetTop} */}
+            <WholePriceInfo />
+            <WholeChart />
+          </div>
+          <UnderLine />
+        </>
+      )}
+
+      {(retailRecent || retailPrev || retailChart) && (
+        <>
+          <div ref={retailRef}>
+            {retailRef.current && retailRef.current.offsetTop}
+            <RetailPriceInfo />
+            <RetailChart />
+          </div>
+          <UnderLine />
+        </>
+      )}
+
+      {(importChart || exportChart) && (
+        <div ref={portRef}>
+          {portRef.current && portRef.current.offsetTop}
+          <ImportExport />
+        </div>
+      )}
+
       <ContentReady />
-      <WholePriceInfo />
-      <WholeChart />
-      <RetailPriceInfo />
-      <RetailChart />
-      <ImportExport />
       <MediaTrend />
+
       <Footer />
     </>
   );

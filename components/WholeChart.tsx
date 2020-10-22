@@ -7,6 +7,7 @@ import {
 import { Line, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import InnerCircle from "./InnerCircle";
 
 const WholeChart = () => {
   const { wholeChartData, auctionVolumeData } = useSelector(
@@ -34,7 +35,9 @@ const WholeChart = () => {
       {chartData && wholeChartData && (
         <>
           <ChartBlock>
-            <ChartTitle>도매 가격 추이</ChartTitle>
+            <ChartTitle>
+              <InnerCircle /> 도매 가격 추이
+            </ChartTitle>
             <DataChartBlock>
               <Line
                 height={250}
@@ -75,7 +78,10 @@ const WholeChart = () => {
       {auctionData && auctionVolumeData && (
         <>
           <ChartBlock>
-            <ChartTitle>도매시장 경매 거래량 추이</ChartTitle>
+            <ChartTitle>
+              <InnerCircle />
+              도매시장 경매 거래량 추이
+            </ChartTitle>
             <DataChartBlock>
               <Bar data={auctionData.data} options={auctionData.options} />
               <RangeLabelBlock>
@@ -104,7 +110,10 @@ export default WholeChart;
 
 const ChartTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #555;
 `;
 
 const ChartBlock = styled.div`

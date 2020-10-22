@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../reducers";
 import { WholePrice } from "../interfaces/price";
+import InnerCircle from "./InnerCircle";
+import { numberFormat } from "../utils/numberFormat";
 
 interface PriceItem {
   date: string;
@@ -20,7 +22,7 @@ interface PriceItem {
   };
 } */
 
-const WholePriceInfo = (/* { title, priceData }: Props */) => {
+const WholePriceInfo = () => {
   const [recentData, setRecentData] = useState<PriceItem[] | null>();
   const [prevData, setPrevData] = useState<PriceItem[] | null>();
   /* const [retailData, setRetailData]  */
@@ -58,7 +60,8 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
       if (result && result[0]) {
         list.push({
           date: ele.ExaminDate,
-          name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
+          /* name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`, */
+          name: ele.ExaminSpeciesName,
           unit: `(${ele.ExaminUnitName})`,
           firstGradePrice: ele.Price,
           secondGradePrice: result[0].Price || null,
@@ -72,7 +75,8 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
           // 품종 중복 없을시만 추가
           list.push({
             date: ele.ExaminDate,
-            name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`,
+            name: ele.ExaminSpeciesName,
+            /* name: `${ele.ExaminItemName}(${ele.ExaminSpeciesName})`, */
             unit: `(${ele.ExaminUnitName})`,
             firstGradePrice: ele.ExaminGradeCode === "1" ? ele.Price : null,
             secondGradePrice: ele.ExaminGradeCode === "2" ? ele.Price : null,
@@ -108,8 +112,11 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
         <>
           <TableBlock>
             <TableTitle>
-              <span>최신 도매 가격</span>
-              <span> {recentData[0].date}</span>
+              <SubTitle>
+                <InnerCircle />
+                최신 도매 가격
+              </SubTitle>
+              <Date> {recentData[0].date}</Date>
             </TableTitle>
             {recentData && (
               <>
@@ -124,8 +131,17 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
                     </Unit>
-                    <div>{data.firstGradePrice}</div>
-                    <div>{data.secondGradePrice}</div>
+                    <div>
+                      {
+                        data.firstGradePrice &&
+                          `${numberFormat(data.firstGradePrice)}원`
+                        /* data.firstGradePrice */
+                      }
+                    </div>
+                    <div>
+                      {data.secondGradePrice &&
+                        `${numberFormat(data.secondGradePrice)}원`}
+                    </div>
                   </TableRow>
                 ))}
               </>
@@ -137,24 +153,33 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
         <>
           <TableBlock>
             <TableTitle>
-              <span>작년 도매 가격</span>
-              <span> {prevData[0].date}</span>
+              <SubTitle>
+                <InnerCircle />
+                작년 도매 가격
+              </SubTitle>
+              <Date> {prevData[0].date}</Date>
             </TableTitle>
             {prevData && (
               <>
-                <TableHeader>
+                <TableHeader style={{ opacity: 0.5 }}>
                   <div>품종</div>
                   <div>상급</div>
                   <div>중급</div>
                 </TableHeader>
                 {prevData.map((data, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={index} style={{ opacity: 0.5 }}>
                     <Unit>
                       <span>{data.name}</span>
                       <span>{data.unit}</span>
                     </Unit>
-                    <div>{data.firstGradePrice}</div>
-                    <div>{data.secondGradePrice}</div>
+                    <div>
+                      {data.firstGradePrice &&
+                        `${numberFormat(data.firstGradePrice)}원`}
+                    </div>
+                    <div>
+                      {data.secondGradePrice &&
+                        `${numberFormat(data.secondGradePrice)}원`}
+                    </div>
                   </TableRow>
                 ))}
               </>
@@ -168,9 +193,24 @@ const WholePriceInfo = (/* { title, priceData }: Props */) => {
 
 export default WholePriceInfo;
 
+const SubTitle = styled.span`
+  font-size: 1.4rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+`;
+
+const Date = styled.span`
+  font-size: 1.2rem;
+  color: #999;
+`;
+
 const TableTitle = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  box-sizing: border-box;
+  padding: 1rem;
 `;
 
 const Unit = styled.div`
@@ -182,12 +222,13 @@ const TableHeader = styled.div`
   text-align: center;
   display: flex;
   background: #fff;
+  padding: 1rem 0;
+  background: #ececec;
   & > div {
+    color: #555;
+    font-size: 1.2rem;
     flex: 1;
-    margin: 2px;
     box-sizing: border-box;
-    background: #bababa;
-    padding: 3px;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -201,28 +242,26 @@ const TableRow = styled.div`
   display: flex;
   background: #fff;
   & > div {
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 700;
     flex: 1;
-    margin: 2px;
+    padding: 1rem 0;
     box-sizing: border-box;
-    padding: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  &:nth-child(2n) > div {
-    background: #eee;
-  }
-
-  &:nth-child(2n + 1) > div {
-    background: #dadada;
+    border-bottom: 1px solid #ececec;
   }
 `;
 
 const TableBlock = styled.div`
-  &:not(:last-child) {
+  /* &:not(:last-child) {
     margin-bottom: 20px;
-  }
+  } */
+  margin-bottom: 20px;
 `;
 
-const MarketInfoBlock = styled.div``;
+const MarketInfoBlock = styled.div`
+  padding-top: 2rem;
+`;
