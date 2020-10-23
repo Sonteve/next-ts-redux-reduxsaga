@@ -161,13 +161,13 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       {data.firstGradePrice &&
                         `${numberFormat(
                           data.firstGradePrice.MinPrice
-                        )}~${numberFormat(data.firstGradePrice.MaxPrice)}`}
+                        )}~${numberFormat(data.firstGradePrice.MaxPrice)}원`}
                     </div>
                     <div>
                       {data.secondGradePrice &&
                         `${numberFormat(
                           data.secondGradePrice.MinPrice
-                        )}~${numberFormat(data.secondGradePrice.MaxPrice)}`}
+                        )}~${numberFormat(data.secondGradePrice.MaxPrice)}원`}
                     </div>
                   </TableRow>
                 ))}
@@ -203,13 +203,13 @@ const RetailPriceInfo = (/* { title, priceData }: Props */) => {
                       {data.firstGradePrice &&
                         `${numberFormat(
                           data.firstGradePrice.MinPrice
-                        )}~${numberFormat(data.firstGradePrice.MaxPrice)}`}
+                        )}~${numberFormat(data.firstGradePrice.MaxPrice)}원`}
                     </div>
                     <div>
                       {data.secondGradePrice &&
                         `${numberFormat(
                           data.secondGradePrice.MinPrice
-                        )}~${numberFormat(data.secondGradePrice.MaxPrice)}`}
+                        )}~${numberFormat(data.secondGradePrice.MaxPrice)}원`}
                     </div>
                   </TableRow>
                 ))}

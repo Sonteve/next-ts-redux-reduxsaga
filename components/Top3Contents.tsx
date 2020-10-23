@@ -11,6 +11,10 @@ import {
 } from "../interfaces/top3Contents";
 
 const Global = createGlobalStyle`
+
+.slick-slider {
+    overflow:hidden;
+}
 .slick-dots {
   bottom: -30px;
 }

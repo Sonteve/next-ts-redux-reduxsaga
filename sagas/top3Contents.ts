@@ -1,10 +1,6 @@
 import axios from "axios";
 import { takeLatest, call, put } from "redux-saga/effects";
-import { ActionType } from "typesafe-actions";
 import {
-  getTop3AuctionVolumeAction,
-  getTop3ExportationAction,
-  getTop3ImportationAction,
   TOP3_IMPORT_INFO_REQUEST,
   TOP3_IMPORT_INFO_SUCCESS,
   TOP3_IMPORT_INFO_FAILURE,
@@ -23,9 +19,8 @@ function getT3ImportDataAPI() {
   );
 }
 
-function* getT3ImportDataSaga(
-  action: ActionType<typeof getTop3ImportationAction.request>
-) {
+function* getT3ImportDataSaga() {
+  /* action: ActionType<typeof getTop3ImportationAction.request> */
   console.log("getT3ImportDataSaga 들어옴");
   try {
     const result = yield call(getT3ImportDataAPI);
@@ -49,9 +44,8 @@ function getT3ExportDataAPI() {
   );
 }
 
-function* getT3ExportDataSaga(
-  action: ActionType<typeof getTop3ExportationAction.request>
-) {
+function* getT3ExportDataSaga() {
+  /*  action: ActionType<typeof getTop3ExportationAction.request> */
   try {
     const result = yield call(getT3ExportDataAPI);
     yield put({
@@ -72,9 +66,8 @@ function getT3AuctionDataAPI() {
   );
 }
 
-function* getT3AuctionDataSaga(
-  action: ActionType<typeof getTop3AuctionVolumeAction.request>
-) {
+function* getT3AuctionDataSaga() {
+  /* action: ActionType<typeof getTop3AuctionVolumeAction.request> */
   try {
     const result = yield call(getT3AuctionDataAPI);
     yield put({

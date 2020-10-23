@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
@@ -12,7 +12,6 @@ import {
   getTop3ExportationAction,
   getTop3ImportationAction,
 } from "../reducers/top3Contents";
-import { useDispatch } from "react-redux";
 
 // 메인페이지
 

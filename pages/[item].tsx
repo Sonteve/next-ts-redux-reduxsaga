@@ -14,7 +14,7 @@ import MediaTrend from "../components/MediaTrend";
 import wrapper from "../store/configureStore";
 import { END } from "redux-saga";
 import { getNewsAction, getYoutubeAction } from "../reducers/media";
-import wholePrice, {
+import {
   getAuctionVolumeDataAction,
   getLastYearWholePriceAction,
   getRecentWholePriceAction,

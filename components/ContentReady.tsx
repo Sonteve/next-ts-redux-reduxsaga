@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, RefObject } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { GiSandsOfTime } from "react-icons/gi";
 import { FcDocument } from "react-icons/fc";
 import styled from "styled-components";
