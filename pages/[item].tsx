@@ -47,17 +47,23 @@ function Detail() {
     retailChart,
     importChart,
     exportChart,
-  } = useSelector(({ wholePrice, retailPrice, importExport }: RootState) => ({
-    wholeRecent: wholePrice.recentPriceDataDone,
-    wholePrev: wholePrice.lastYearPriceDataDone,
-    wholeChart: wholePrice.wholeChartDataDone,
-    auctionChart: wholePrice.auctionVolumeDataDone,
-    retailRecent: retailPrice.recentPriceDataDone,
-    retailPrev: retailPrice.lastYearPriceDataDone,
-    retailChart: retailPrice.retailChartDataDone,
-    importChart: importExport.importData,
-    exportChart: importExport.exportData,
-  }));
+    news,
+    youtube,
+  } = useSelector(
+    ({ wholePrice, retailPrice, importExport, media }: RootState) => ({
+      wholeRecent: wholePrice.recentPriceDataDone,
+      wholePrev: wholePrice.lastYearPriceDataDone,
+      wholeChart: wholePrice.wholeChartDataDone,
+      auctionChart: wholePrice.auctionVolumeDataDone,
+      retailRecent: retailPrice.recentPriceDataDone,
+      retailPrev: retailPrice.lastYearPriceDataDone,
+      retailChart: retailPrice.retailChartDataDone,
+      importChart: importExport.importDataDone,
+      exportChart: importExport.exportDataDone,
+      news: media.getNewsDone,
+      youtube: media.getYoutubeDone,
+    })
+  );
   const dispatch = useDispatch();
   const router = useRouter();
   const { keyword } = router.query;
@@ -69,13 +75,15 @@ function Detail() {
   const [retailOffset, setRetailOffset] = useState<number | null>(0);
   const wholeRef = useRef<HTMLDivElement>(null);
   const [wholeOffset, setWholeOffset] = useState<number | null>(0);
+  const trendRef = useRef<HTMLDivElement>(null);
+  const [trendOffset, setTrendOffset] = useState<number | null>(0);
 
   const onClickSearchFormOpenButton = useCallback(() => {
     setSearch(true);
   }, [search]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    /* window.scrollTo(0, 0); */
     setSearch(false);
     dispatch(searchFormInitAction());
     console.log("Item : name ", keyword);
@@ -100,9 +108,21 @@ function Detail() {
       } else {
         setWholeOffset(null);
       }
+
+      if (trendRef.current) {
+        setTrendOffset(trendRef.current.offsetTop);
+      } else {
+        setTrendOffset(null);
+      }
     }, 100);
     /* setPortOffset(portRef.current.offsetTop); */
-  }, [keyword, portRef.current, retailRef.current, wholeRef.current]);
+  }, [
+    keyword,
+    portRef.current,
+    retailRef.current,
+    wholeRef.current,
+    trendRef.current,
+  ]);
 
   useEffect(() => {
     console.log(
@@ -115,7 +135,7 @@ function Detail() {
       "keyword",
       keyword
     );
-  }, [portOffset, retailOffset, wholeOffset, keyword]);
+  }, [portOffset, retailOffset, wholeOffset, trendOffset, keyword]);
 
   return (
     <>
@@ -132,7 +152,9 @@ function Detail() {
           !retailPrev &&
           !retailChart &&
           !importChart &&
-          !exportChart
+          !exportChart &&
+          !youtube &&
+          !news
             ? 5.5
             : 10
         }
@@ -142,6 +164,7 @@ function Detail() {
         wholeOffset={wholeOffset}
         retailOffset={retailOffset}
         portOffset={portOffset}
+        trendOffset={trendOffset}
         isSearch={search}
       />
       {search && <SearchBar focus={search} isItemPage />}
@@ -168,15 +191,21 @@ function Detail() {
       )}
 
       {(importChart || exportChart) && (
-        <div ref={portRef}>
-          {portRef.current && portRef.current.offsetTop}
-          <ImportExport />
+        <>
+          <div ref={portRef}>
+            {portRef.current && portRef.current.offsetTop}
+            <ImportExport />
+          </div>
+          <UnderLine />
+        </>
+      )}
+      <ContentReady />
+      {(news || youtube) && (
+        <div ref={trendRef}>
+          {trendRef.current && trendRef.current.offsetTop}
+          <MediaTrend />
         </div>
       )}
-
-      <ContentReady />
-      <MediaTrend />
-
       <Footer />
     </>
   );

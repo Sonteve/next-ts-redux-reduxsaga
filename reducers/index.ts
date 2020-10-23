@@ -6,6 +6,7 @@ import media, { MediaState } from "./media";
 import wholePrice, { WholePriceState } from "./wholePrice";
 import retailPrice, { RetailPriceState } from "./retailPrice";
 import importExport, { ImportExportState } from "./importExport";
+import top3Contents, { Top3ContentsState } from "./top3Contents";
 /* const rootReducer = combineReducers({
   search,
   inquire,
@@ -19,6 +20,7 @@ export type State = {
   wholePrice: WholePriceState;
   retailPrice: RetailPriceState;
   importExport: ImportExportState;
+  top3Contents: Top3ContentsState;
 };
 const rootReducer = (state: State | undefined, action: AnyAction): State => {
   switch (action.type) {
@@ -33,6 +35,7 @@ const rootReducer = (state: State | undefined, action: AnyAction): State => {
         wholePrice,
         retailPrice,
         importExport,
+        top3Contents,
       });
       return combineReducer(state, action);
     }

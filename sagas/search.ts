@@ -49,16 +49,19 @@ async function getRecentNewsListAPI(url: string) {
     compact: true,
     spaces: 4,
   });
+  /* console.log("xmlToJson", xmlToJson); */
+  console.log(url, xmlToJson);
+
   const newsList = await JSON.parse(xmlToJson).rss.channel.item;
 
   newsList.map((news: any) => {
     const { title, link, description, author, pubDate } = news;
     extractedData.push({
-      title: title._text,
-      link: link._text,
-      description: description._cdata,
-      author: author._text,
-      pubDate: pubDate._text,
+      title: title._text || "",
+      link: link._text || "",
+      description: description._cdata || "",
+      author: author._text || "",
+      pubDate: pubDate._text || "",
     });
   });
   return extractedData;

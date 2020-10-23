@@ -3,6 +3,8 @@ import { AppContext, AppInitialProps, AppProps } from "next/app";
 import { createGlobalStyle } from "styled-components";
 import wrapper from "../store/configureStore";
 import Head from "next/head";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   Component,

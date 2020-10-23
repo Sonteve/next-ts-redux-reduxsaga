@@ -5,6 +5,7 @@ import { mediaSaga } from "./media";
 import { wholePriceSaga } from "./wholePrice";
 import { retailPriceSaga } from "./retailPrice";
 import { importExportSaga } from "./importExport";
+import { top3ContentsSaga } from "./top3Contents";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://tapi.agripa.kr";
@@ -17,5 +18,6 @@ export function* rootSaga() {
     wholePriceSaga(),
     retailPriceSaga(),
     importExportSaga(),
+    top3ContentsSaga(),
   ]);
 }

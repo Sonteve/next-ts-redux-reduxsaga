@@ -5,7 +5,7 @@ import {
   createAction,
   ActionType,
 } from "typesafe-actions";
-import { Inquire, InquireSuccess } from "../interfaces/inquire";
+import { Inquire, InquireResponse } from "../interfaces/inquire";
 import produce from "immer";
 
 export const SEND_INQUIRE_REQUEST = "SEND_INQUIRE_REQUEST";
@@ -21,7 +21,7 @@ export const sendInquireAction = createAsyncAction(
   SEND_INQUIRE_REQUEST,
   SEND_INQUIRE_SUCCESS,
   SEND_INQUIRE_FAILURE
-)<Inquire, InquireSuccess, AxiosError>();
+)<Inquire, InquireResponse, AxiosError>();
 
 export const setInquireState = createAction(SET_INQUIRE_STATE)<boolean>();
 
@@ -30,7 +30,7 @@ type InquireAction = ActionType<
 >;
 
 export interface InquireState {
-  inquireContent: InquireSuccess | null;
+  inquireContent: string | null;
   sendInquireLoading: boolean;
   sendInquireDone: boolean;
   sendInquireError: AxiosError | null;
@@ -65,7 +65,7 @@ const inquire = createReducer<InquireState, InquireAction>(initialState, {
     produce(state, (draft) => {
       draft.sendInquireLoading = false;
       draft.sendInquireDone = true;
-      draft.inquireContent = action.payload;
+      draft.inquireContent = action.payload.data;
     }),
   [SEND_INQUIRE_FAILURE]: (state, action) =>
     produce(state, (draft) => {

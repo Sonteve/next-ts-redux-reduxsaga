@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { RootState } from "../reducers";
 import { getImportExportChartTemplate } from "../utils/getChartTemplate";
 import { Line } from "react-chartjs-2";
+import UnderLine from "./UnderLine";
+import InnerCircle from "./InnerCircle";
 
 const ImportExport = () => {
   const { importData, exportData } = useSelector(
@@ -26,13 +28,17 @@ const ImportExport = () => {
       {importChartData && importData && (
         <>
           <ChartBlock>
-            <ChartTitle>수입 월간 추이</ChartTitle>
+            <ChartTitle>
+              <InnerCircle />
+              수입 월간 추이
+            </ChartTitle>
             <DataChartBlock>
               <Line
                 height={250}
                 data={importChartData.data}
                 options={importChartData.options}
               />
+              <UnderLine height={0.2} />
               <RangeLabelBlock>
                 <RangeLabel>
                   {importData.RangeLabel && importData.RangeLabel[0]}
@@ -49,13 +55,17 @@ const ImportExport = () => {
       {exportChartData && exportData && (
         <>
           <ChartBlock>
-            <ChartTitle>수출 월간 추이</ChartTitle>
+            <ChartTitle>
+              <InnerCircle />
+              수출 월간 추이
+            </ChartTitle>
             <DataChartBlock>
               <Line
                 height={250}
                 data={exportChartData.data}
                 options={exportChartData.options}
               />
+              <UnderLine height={0.2} />
               <RangeLabelBlock>
                 <RangeLabel>
                   {exportData.RangeLabel && exportData.RangeLabel[0]}
@@ -77,11 +87,14 @@ const ImportExport = () => {
 
 const ChartTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #555;
+  padding: 1rem 0;
 `;
 
 const ChartBlock = styled.div`
-  padding: 10px;
+  padding: 0 1rem;
 `;
 
 const DataChartBlock = styled.div`
@@ -93,15 +106,15 @@ const DataChartBlock = styled.div`
 const RangeLabelBlock = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: #999;
 `;
 
 const RangeLabel = styled.span`
-  font-weight: 600;
+  font-weight: 300;
   display: inline-block;
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `;
 
 export default ImportExport;

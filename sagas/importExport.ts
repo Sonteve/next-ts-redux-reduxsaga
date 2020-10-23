@@ -13,7 +13,9 @@ import {
 } from "../reducers/importExport";
 
 function getImportDataAPI(data: string) {
-  return axios.get(`http://tapi.agripa.kr/v2/trade/importation/${data}`);
+  return axios.get(
+    `http://tapi.agripa.kr/v2/trade/importation/line-graph/${data}`
+  );
 }
 
 function* getImportDataSaga(
@@ -34,7 +36,9 @@ function* getImportDataSaga(
 }
 
 function getExportDataAPI(data: string) {
-  return axios.get(`http://tapi.agripa.kr/v2/trade/exportation/${data}`);
+  return axios.get(
+    `http://tapi.agripa.kr/v2/trade/exportation/line-graph/${data}`
+  );
 }
 
 function* getExportDataSaga(

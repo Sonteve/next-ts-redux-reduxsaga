@@ -8,6 +8,7 @@ import { Line, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import InnerCircle from "./InnerCircle";
+import UnderLine from "./UnderLine";
 
 const WholeChart = () => {
   const { wholeChartData, auctionVolumeData } = useSelector(
@@ -44,6 +45,7 @@ const WholeChart = () => {
                 data={chartData.data}
                 options={chartData.options}
               />
+              <UnderLine height={0.2} />
               <RangeLabelBlock>
                 <RangeLabel>
                   {wholeChartData.RangeLabel && wholeChartData.RangeLabel[0]}
@@ -114,10 +116,11 @@ const ChartTitle = styled.div`
   align-items: center;
   font-size: 1.4rem;
   color: #555;
+  padding: 1rem 0;
 `;
 
 const ChartBlock = styled.div`
-  padding: 10px;
+  padding: 0 1rem;
 `;
 
 const DataChartBlock = styled.div`
@@ -134,8 +137,8 @@ const RangeLabelBlock = styled.div`
 `;
 
 const RangeLabel = styled.span`
-  font-weight: 600;
+  font-weight: 300;
   display: inline-block;
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `;

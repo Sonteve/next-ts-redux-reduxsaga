@@ -1,15 +1,7 @@
-import React, {
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  UIEvent,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import Router, { useRouter } from "next/router";
 import animateScrollTo from "animated-scroll-to";
-import { off } from "process";
 import UnderLine from "./UnderLine";
 import { RootState } from "../reducers";
 import { useSelector } from "react-redux";
@@ -20,6 +12,7 @@ interface Props {
   wholeOffset: number | null;
   retailOffset: number | null;
   portOffset: number | null;
+  trendOffset: number | null;
 }
 
 interface Offset {
@@ -36,6 +29,7 @@ const Navigation = ({
   wholeOffset,
   retailOffset,
   portOffset,
+  trendOffset,
   isSearch,
 }: Props) => {
   const router = useRouter();
@@ -65,8 +59,14 @@ const Navigation = ({
         offset: portOffset,
       });
     }
+    if (trendOffset) {
+      arr.push({
+        type: "trend",
+        offset: trendOffset,
+      });
+    }
     setOffsets(arr);
-  }, [wholeOffset, retailOffset, portOffset]);
+  }, [wholeOffset, retailOffset, portOffset, trendOffset]);
 
   useEffect(() => {
     console.log(offsets);
@@ -83,9 +83,12 @@ const Navigation = ({
       } else if (menu === "port" && portOffset !== null) {
         console.log("port", `${portOffset}으로 이동`);
         animateScrollTo(portOffset - 100);
+      } else if (menu === "trend" && trendOffset !== null) {
+        console.log("trend", `${trendOffset}으로 이동`);
+        animateScrollTo(trendOffset - 100);
       }
     },
-    [wholeOffset, retailOffset, portOffset]
+    [wholeOffset, retailOffset, portOffset, trendOffset]
   );
 
   const onClickSearch = useCallback(() => {
@@ -107,6 +110,9 @@ const Navigation = ({
     if (offsets[0].type === "port") {
       setCurrentMenu("port");
     }
+    if (offsets[0].type === "trend") {
+      setCurrentMenu("trend");
+    }
 
     const currentMenuStyle = (e: any) => {
       wScroll = e.srcElement.scrollingElement.scrollTop;
@@ -125,7 +131,7 @@ const Navigation = ({
         } else {
           setCurrentMenu(offsets[1].type);
         }
-      } else {
+      } else if (offsets.length === 3) {
         if (
           wScroll + 110 >= offsets[0].offset &&
           wScroll + 110 < offsets[1].offset
@@ -138,6 +144,25 @@ const Navigation = ({
           setCurrentMenu(offsets[1].type);
         } else {
           setCurrentMenu(offsets[2].type);
+        }
+      } else {
+        if (
+          wScroll + 110 >= offsets[0].offset &&
+          wScroll + 110 < offsets[1].offset
+        ) {
+          setCurrentMenu(offsets[0].type);
+        } else if (
+          wScroll + 110 >= offsets[1].offset &&
+          wScroll + 110 < offsets[2].offset
+        ) {
+          setCurrentMenu(offsets[1].type);
+        } else if (
+          wScroll + 110 >= offsets[2].offset &&
+          wScroll + 110 < offsets[3].offset
+        ) {
+          setCurrentMenu(offsets[2].type);
+        } else {
+          setCurrentMenu(offsets[3].type);
         }
       }
     };
@@ -193,6 +218,16 @@ const Navigation = ({
                     active={currentMenu === "port" && true}
                   >
                     수출입
+                  </MenuButton>
+                </li>
+              )}
+              {trendOffset && (
+                <li>
+                  <MenuButton
+                    onClick={() => onClickQuickMenuButton("trend")}
+                    active={currentMenu === "trend" && true}
+                  >
+                    트렌드
                   </MenuButton>
                 </li>
               )}

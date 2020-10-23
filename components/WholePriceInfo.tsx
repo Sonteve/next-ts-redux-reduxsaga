@@ -243,7 +243,7 @@ const TableRow = styled.div`
   background: #fff;
   & > div {
     color: #333;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 700;
     flex: 1;
     padding: 1rem 0;

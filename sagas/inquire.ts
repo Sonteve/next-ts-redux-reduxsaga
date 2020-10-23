@@ -10,7 +10,7 @@ import axios from "axios";
 
 function sendInquireAPI(data: Inquire) {
   console.log("inquireDAta", data);
-  return axios.post("/inquire", data);
+  return axios.post("/v2/question", data);
 }
 
 function* sendInquireSaga(
@@ -18,6 +18,8 @@ function* sendInquireSaga(
 ) {
   try {
     const result = yield call(sendInquireAPI, action.payload);
+    console.log("result", result);
+    console.log("result.data", result.data.data);
     yield put({
       type: SEND_INQUIRE_SUCCESS,
       payload: result.data,

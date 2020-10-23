@@ -82,7 +82,11 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
     produce(state, (draft) => {
       draft.getNewsLoading = false;
       draft.news = action.payload;
-      draft.getNewsDone = true;
+      if (action.payload) {
+        draft.getNewsDone = true;
+      } else {
+        draft.getNewsDone = false;
+      }
       /* if (action.payload) {
         draft.getNewsDone = true;
       } else {
@@ -103,7 +107,11 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
     produce(state, (draft) => {
       draft.getYoutubeLoading = false;
       draft.youtube = action.payload;
-      draft.getYoutubeDone = true;
+      if (action.payload) {
+        draft.getYoutubeDone = true;
+      } else {
+        draft.getYoutubeDone = false;
+      }
       /* if (action.payload) {
         draft.getYoutubeDone = true;  
       } else {
@@ -123,7 +131,11 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
   [GET_MORE_NEWS_SUCCESS]: (state, action) =>
     produce(state, (draft) => {
       draft.getNewsLoading = false;
-      draft.getNewsDone = true;
+      if (action.payload) {
+        draft.getNewsDone = true;
+      } else {
+        draft.getNewsDone = false;
+      }
       if (draft.news) {
         draft.news.data.push(...action.payload.data);
         draft.news.meta = action.payload.meta;
@@ -142,7 +154,11 @@ const media = createReducer<MediaState, MediaActions>(initialState, {
   [GET_MORE_YOUTUBE_SUCCESS]: (state, action) =>
     produce(state, (draft) => {
       draft.getYoutubeLoading = false;
-      draft.getYoutubeDone = true;
+      if (action.payload) {
+        draft.getYoutubeDone = true;
+      } else {
+        draft.getYoutubeDone = false;
+      }
       if (draft.youtube) {
         draft.youtube.data.push(...action.payload.data);
         draft.youtube.meta = action.payload.meta;

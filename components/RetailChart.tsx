@@ -4,6 +4,8 @@ import { getChartTemplate } from "../utils/getChartTemplate";
 import { Line } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import UnderLine from "./UnderLine";
+import InnerCircle from "./InnerCircle";
 
 const RetailChart = () => {
   const { retailChartData } = useSelector(
@@ -26,13 +28,17 @@ const RetailChart = () => {
       {chartData && retailChartData && (
         <>
           <ChartBlock>
-            <ChartTitle>소비자 가격 추이</ChartTitle>
+            <ChartTitle>
+              <InnerCircle />
+              소비자 가격 추이
+            </ChartTitle>
             <DataChartBlock>
               <Line
                 height={250}
                 data={chartData.data}
                 options={chartData.options}
               />
+              <UnderLine height={0.2} />
               <RangeLabelBlock>
                 <RangeLabel>{retailChartData.RangeLabel[0]}</RangeLabel>
                 <RangeLabel>
@@ -77,11 +83,14 @@ export default RetailChart;
 
 const ChartTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #555;
+  padding: 1rem 0;
 `;
 
 const ChartBlock = styled.div`
-  padding: 10px;
+  padding: 0 1rem;
 `;
 
 const DataChartBlock = styled.div`
@@ -93,13 +102,13 @@ const DataChartBlock = styled.div`
 const RangeLabelBlock = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: #999;
 `;
 
 const RangeLabel = styled.span`
-  font-weight: 600;
+  font-weight: 300;
   display: inline-block;
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `;

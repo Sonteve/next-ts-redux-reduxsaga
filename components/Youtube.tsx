@@ -65,18 +65,18 @@ const Youtube = ({ datas }: Props) => {
             target="_blank"
             href={`https://www.youtube.com/watch?v=${data.VideoID}`}
           >
-            <YoutubeContent>
-              <Thumbnail>
-                <img src={data.ThumbnailURL} alt={data.Title} />
-              </Thumbnail>
-              <Detail>
-                <DetailLeft>{data.Title}</DetailLeft>
-                <DetailRight>
-                  <div>{data.ChannelTitle}</div>
-                  <div>{moment(data.PublishedAt).format("YY.MM.DD")}</div>
-                </DetailRight>
-              </Detail>
-            </YoutubeContent>
+            <Thumbnail>
+              <img src={data.ThumbnailURL} alt={data.Title} />
+            </Thumbnail>
+            <Desc>
+              <DescInfo>
+                <DescTitle>{data.Title}</DescTitle>
+                <ChannelTitle>{data.ChannelTitle}</ChannelTitle>
+                <PublishedDate>
+                  {moment(data.PublishedAt).format("YY.MM.DD")}
+                </PublishedDate>
+              </DescInfo>
+            </Desc>
           </YoutubeItemWrapper>
         ))}
       </LazyLoad>
@@ -87,37 +87,57 @@ const Youtube = ({ datas }: Props) => {
 
 export default Youtube;
 
+const ChannelTitle = styled.div`
+  width: 100%;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 1vw 0;
+  font-size: 1.2rem;
+`;
+
+const PublishedDate = styled.div`
+  font-size: 1.2rem;
+  color: #555;
+  overflow: hidden;
+`;
+
 const Thumbnail = styled.div`
-  width: 130px;
-  & > img {
-    width: 100%;
+  flex: 1;
+
+  & img {
     display: block;
+    width: 100%;
   }
 `;
-const Detail = styled.div`
+const Desc = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex: 1;
-  margin-left: 15px;
+  width: 65%;
+  box-sizing: border-box;
+  padding: 0 1.5rem;
 `;
-const DetailLeft = styled.div``;
-const DetailRight = styled.div``;
+const DescTitle = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #555;
+`;
+const DescInfo = styled.div`
+  width: 100%;
+`;
 
 const YoutubeBlock = styled.div``;
 
 const YoutubeItemWrapper = styled.a`
-  padding: 10px;
   display: flex;
-  flex-direction: row;
-  border: 1px solid #999;
-  border-radius: 10px;
-  &:not(:last-child) {
-    margin-bottom: 10px;
-  }
-`;
-
-const YoutubeContent = styled.div`
-  display: flex;
-  width: 100%;
+  align-items: center;
+  padding: 2rem;
+  text-decoration: none;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ececec;
 `;

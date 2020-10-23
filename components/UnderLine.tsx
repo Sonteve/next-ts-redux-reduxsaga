@@ -1,14 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 
-const UnderLine = () => {
-  return <UnderLineBlock></UnderLineBlock>;
+interface Props {
+  height?: number;
+}
+
+const UnderLine = ({ height = 1 }: Props) => {
+  return <UnderLineBlock height={height}></UnderLineBlock>;
 };
 
 export default UnderLine;
 
-const UnderLineBlock = styled.div`
+const UnderLineBlock = styled.div<Props>`
   background-color: #ececec;
-  height: 1rem;
+  height: ${(props) => props.height}rem;
   width: 100%;
 `;
