@@ -13,7 +13,7 @@ import {
 const Global = createGlobalStyle`
 
 .slick-slider {
-    overflow:hidden;
+    /* overflow:hidden; */
 }
 .slick-dots {
   bottom: -30px;
@@ -43,7 +43,7 @@ const Top3Contents = () => {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,

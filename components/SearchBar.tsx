@@ -64,18 +64,55 @@ const SearchBar = ({ focus, isItemPage }: Props) => {
 
   const onKeyPressCheck = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      /* console.log("e.key", e.key);
-      if (!searchList.length) return;
-      console.log("submit 값 : ", input); */
       if (e.key !== "Enter" || searchList.length === 0) return;
       const { Keyword, ItemCode } = searchList[0];
+      /* setInput(""); */
+      const prevSearchCookie: SearchCookie[] = cookie.load("search-cookie");
+      // 검색 당시 정보 저장
+      const newData = {
+        Keyword,
+        ItemCode,
+        createdAt: moment(new Date()).format("YY.MM.DD"),
+      };
+      if (prevSearchCookie) {
+        prevSearchCookie.map((v) => console.log(v));
+        // 중복 검색어 제거
+        const data = prevSearchCookie.filter(
+          (data) => data.Keyword !== newData.Keyword
+        );
+        if (data.length >= 5) {
+          // 쿠키 저장시 이전목록이 5개 이상이면 마지막데이터는 지워진다.
+          cookie.save("search-cookie", [newData, ...data.splice(0, 4)], {
+            expires: getOneYearLater(),
+          });
+        } else {
+          cookie.save("search-cookie", [newData, ...data], {
+            expires: getOneYearLater(),
+          });
+        }
+
+        console.log("기존 쿠키에 새 데이터 추가");
+      } else {
+        cookie.save("search-cookie", [newData], {
+          expires: getOneYearLater(),
+        });
+        console.log("새 쿠키생성");
+      }
+      dispatch(
+        setCurrentItem({
+          ItemCode,
+          Keyword,
+        })
+      );
+      animateScrollTo(0, { speed: 0, minDuration: 0, maxDuration: 0 });
+
       Router.push(`/product?keyword=${Keyword}&itemcode=${ItemCode}`);
     },
     [input, searchList]
   );
 
   // 검색결과 아이템 클릭시 쿠키에 추가 및 라우팅
-  const onClickItem = useCallback(async (item: SearchItem) => {
+  const onClickItem = useCallback((item: SearchItem) => {
     setInput("");
     const prevSearchCookie: SearchCookie[] = cookie.load("search-cookie");
     console.log("클릭한 아이템", item);
@@ -121,6 +158,7 @@ const SearchBar = ({ focus, isItemPage }: Props) => {
     setInput("");
   }, []);
 
+  // 이전 검색목록 제거 및 입력창에 focus준다.
   const onClickCookieRemoveButton = useCallback(() => {
     cookie.remove("search-cookie");
     dispatch(setPrevSearchCookie(null));
