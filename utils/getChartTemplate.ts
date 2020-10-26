@@ -184,8 +184,10 @@ export function getChartTemplate(datas: ChartData): any {
       filteredMarketName = line.MarketName;
     } */
     /* console.log("line", line); */
+
     lineData.push({
       label: `${line.ExaminSpeciesName}(${line.ExaminGradeName})`, // 그 선에 해당하는 시장 이름.
+      /* label: `${line.ExaminSpeciesName}`, // 그 선에 해당하는 시장 이름. */
       data: filteredData, // 그 선에 들어가는 가격값 배열.
       fill: false,
       borderColor: dotColor[index],

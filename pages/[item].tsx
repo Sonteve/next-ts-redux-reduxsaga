@@ -182,7 +182,7 @@ function Detail() {
       {(retailRecent || retailPrev || retailChart) && (
         <>
           <div ref={retailRef}>
-            {retailRef.current && retailRef.current.offsetTop}
+            {/* {retailRef.current && retailRef.current.offsetTop} */}
             <RetailPriceInfo />
             <RetailChart />
           </div>
@@ -193,7 +193,7 @@ function Detail() {
       {(importChart || exportChart) && (
         <>
           <div ref={portRef}>
-            {portRef.current && portRef.current.offsetTop}
+            {/* {portRef.current && portRef.current.offsetTop} */}
             <ImportExport />
           </div>
           <UnderLine />
@@ -202,7 +202,7 @@ function Detail() {
       <ContentReady />
       {(news || youtube) && (
         <div ref={trendRef}>
-          {trendRef.current && trendRef.current.offsetTop}
+          {/* {trendRef.current && trendRef.current.offsetTop} */}
           <MediaTrend />
         </div>
       )}

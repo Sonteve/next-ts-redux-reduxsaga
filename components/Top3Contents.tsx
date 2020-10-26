@@ -12,8 +12,10 @@ import {
 
 const Global = createGlobalStyle`
 
+
 .slick-slider {
     /* overflow:hidden; */
+    z-index: 0;
 }
 .slick-dots {
   bottom: -30px;
@@ -24,6 +26,10 @@ const Global = createGlobalStyle`
 
 .slick-dots li.slick-active button:before {
   color: green;
+}
+
+.slick-track {
+  width: 100%;
 }
 `;
 
@@ -43,10 +49,11 @@ const Top3Contents = () => {
 
   const settings = {
     dots: true,
-    infinite: false,
-    speed: 500,
+    /* dots: true,
+    infinite: true,
+    speed: 700,
     slidesToShow: 1,
-    slidesToScroll: 1,
+    slidesToScroll: 1, */
   };
   return (
     <Top3ContentsBlock>
@@ -56,7 +63,7 @@ const Top3Contents = () => {
           <div>
             <Top3Title>
               거래량 상위3순위
-              <span>TOP3</span>
+              {/* <span>TOP3</span> */}
             </Top3Title>
             {t3AuctionData.map((data, index) => (
               <div key={index}>
@@ -75,9 +82,7 @@ const Top3Contents = () => {
         )}
         {t3ImportData && (
           <div>
-            <Top3Title>
-              수입량 상위3순위<span>TOP3</span>
-            </Top3Title>
+            <Top3Title>수입량 상위3순위{/* <span>TOP3</span> */}</Top3Title>
             {t3ImportData.map((data, index) => (
               <div key={index}>
                 <T3Item /* key={index} */ onClick={() => onClickTop3Item(data)}>
@@ -95,9 +100,7 @@ const Top3Contents = () => {
         )}
         {t3ExportData && (
           <div>
-            <Top3Title>
-              수출량 상위3순위<span>TOP3</span>
-            </Top3Title>
+            <Top3Title>수출량 상위3순위{/* <span>TOP3</span> */}</Top3Title>
             {t3ExportData.map((data, index) => (
               <div key={index}>
                 <T3Item /* key={index} */ onClick={() => onClickTop3Item(data)}>
@@ -126,11 +129,11 @@ const Top3ContentsBlock = styled.div`
 const Rank = styled.div`
   width: 1.5rem;
   height: 1.5rem;
-  color: #d4d4d4;
+  color: #555;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #555;
   margin-right: 1rem;
 `;
 const Value = styled.div`
@@ -142,12 +145,15 @@ const Value = styled.div`
 const ItemName = styled.div`
   font-size: 1.5rem;
   font-weight: 500;
+  color: #555;
 `;
 const Top3Title = styled.div`
   background: #ececec;
   font-size: 1.5rem;
   padding: 1rem 2.5rem;
   border-bottom: 1px solid #d4d4d4;
+  font-weight: 700;
+  color: #555;
 
   & > span {
     margin-left: 1rem;

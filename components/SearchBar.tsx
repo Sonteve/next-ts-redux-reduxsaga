@@ -339,6 +339,7 @@ const SearchResult = styled.div`
   width: 100%;
   font-size: 17px;
   top: 51px;
+  z-index: 9998;
 `;
 const SearchForm = styled.form<SCProps>`
   display: flex;
